@@ -1,0 +1,38 @@
+<article
+  class="project-card card"
+  [class.is-soon]="project().status === 'coming-soon'"
+  [attr.data-accent]="project().accent"
+>
+  <div class="project-visual">
+    <span class="project-initial">{{ project().name.charAt(0) }}</span>
+    @if (project().status === 'live') {
+      <span class="status-dot" aria-hidden="true"></span>
+    }
+  </div>
+
+  <div class="project-body">
+    <div class="project-heading">
+      <span class="project-category">{{ project().category }}</span>
+      <h3 class="project-name">{{ project().name }}</h3>
+    </div>
+
+    <p class="project-desc">{{ project().description }}</p>
+
+    <div class="project-tags">
+      @for (tag of project().tags; track tag) {
+        <span class="tag">{{ tag }}</span>
+      }
+    </div>
+
+    @if (project().url) {
+      <a class="project-link" [href]="project().url" target="_blank" rel="noopener">
+        Ver sitio
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 17 17 7M9 7h8v8" />
+        </svg>
+      </a>
+    } @else {
+      <span class="project-link is-disabled">Próximamente</span>
+    }
+  </div>
+</article>

@@ -1,0 +1,85 @@
+.contact-panel {
+  padding: clamp(32px, 6vw, 64px);
+  display: grid;
+  gap: 36px;
+  background:
+    radial-gradient(600px circle at 90% -10%, rgba(124, 92, 255, 0.14), transparent 60%),
+    var(--surface);
+}
+
+.contact-copy .section-title {
+  margin-top: 6px;
+}
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  transition:
+    border-color 0.25s var(--ease),
+    transform 0.25s var(--ease),
+    background 0.25s var(--ease);
+}
+
+.channel:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-3px);
+}
+
+.channel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--accent-2);
+}
+
+.channel-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.channel-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.channel-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.channel-value {
+  font-weight: 600;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-cta {
+  width: fit-content;
+}
+
+@media (max-width: 720px) {
+  .channels {
+    grid-template-columns: 1fr;
+  }
+}

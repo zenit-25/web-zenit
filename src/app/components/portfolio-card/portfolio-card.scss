@@ -1,0 +1,121 @@
+.project-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.project-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-6px);
+}
+
+.project-card.is-soon {
+  border-style: dashed;
+}
+
+.project-card.is-soon:hover {
+  transform: none;
+}
+
+.project-visual {
+  position: relative;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 140% at 15% 0%, var(--accent-glow-1) 0%, transparent 60%),
+    radial-gradient(120% 140% at 100% 100%, var(--accent-glow-2) 0%, transparent 55%),
+    var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+}
+
+.project-card[data-accent='violet'] {
+  --accent-glow-1: rgba(124, 92, 255, 0.35);
+  --accent-glow-2: rgba(53, 227, 196, 0.18);
+}
+.project-card[data-accent='teal'] {
+  --accent-glow-1: rgba(53, 227, 196, 0.32);
+  --accent-glow-2: rgba(91, 141, 255, 0.2);
+}
+.project-card[data-accent='blue'] {
+  --accent-glow-1: rgba(91, 141, 255, 0.34);
+  --accent-glow-2: rgba(124, 92, 255, 0.2);
+}
+
+.project-initial {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.status-dot {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(53, 227, 196, 0.18);
+}
+
+.project-body {
+  padding: 26px 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.project-category {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.project-name {
+  font-size: 1.25rem;
+  margin-top: 6px;
+}
+
+.project-desc {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  flex: 1;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  width: fit-content;
+}
+
+.project-link svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s var(--ease);
+}
+
+.project-link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.project-link.is-disabled {
+  color: var(--text-faint);
+}

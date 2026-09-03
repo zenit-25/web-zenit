@@ -1,0 +1,42 @@
+<header class="navbar" [class.is-scrolled]="isScrolled()">
+  <div class="navbar-inner container">
+    <a href="#inicio" class="brand" (click)="closeMenu()">
+      <img class="brand-mark" src="assets/logo-icon.png" alt="{{ site.brand }}" />
+      <span class="brand-name">{{ site.brand }}</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navegación principal">
+      @for (link of links; track link.fragment) {
+        <a [href]="'#' + link.fragment">{{ link.label }}</a>
+      }
+    </nav>
+
+    <a class="btn btn-primary btn-sm cta-desktop" [href]="whatsappLink" target="_blank" rel="noopener">
+      Cotiza tu proyecto
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      [class.is-open]="isMenuOpen()"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen()"
+      aria-label="Abrir menú"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" [class.is-open]="isMenuOpen()">
+    <nav aria-label="Navegación móvil">
+      @for (link of links; track link.fragment) {
+        <a [href]="'#' + link.fragment" (click)="closeMenu()">{{ link.label }}</a>
+      }
+    </nav>
+    <a class="btn btn-primary cta-mobile" [href]="whatsappLink" target="_blank" rel="noopener" (click)="closeMenu()">
+      Cotiza tu proyecto
+    </a>
+  </div>
+</header>

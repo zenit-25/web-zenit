@@ -1,0 +1,33 @@
+<section id="inicio" class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="container hero-inner">
+    <div class="eyebrow">Disponible para nuevos proyectos</div>
+
+    <h1 class="hero-title">
+      Sitios web con diseño <span class="gradient-text">moderno</span> y desarrollo
+      <span class="gradient-text">a la medida</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Soy {{ site.name }}, desarrollador web. Diseño y construyo páginas y sistemas web
+      claros, rápidos y pensados para el negocio de cada cliente.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#portafolio">Ver portafolio</a>
+      <a class="btn btn-ghost" [href]="whatsappLink" target="_blank" rel="noopener">
+        Hablar por WhatsApp
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      @for (stat of stats; track stat.label) {
+        <div class="stat">
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>

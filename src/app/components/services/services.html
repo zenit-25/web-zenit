@@ -1,0 +1,66 @@
+<section id="servicios" class="section services">
+  <div class="container">
+    <div class="section-head" appReveal>
+      <div class="eyebrow">Servicios</div>
+      <h2 class="section-title">Lo que puedo hacer por tu negocio</h2>
+      <p class="section-subtitle">
+        Desarrollo web y diseño de páginas, de principio a fin: desde la idea hasta un sitio
+        publicado y en funcionamiento.
+      </p>
+    </div>
+
+    <div class="services-grid">
+      @for (service of services; track service.title) {
+        <article class="service-card card" appReveal>
+          <div class="service-icon">
+            @switch (service.icon) {
+              @case ('layout') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="3" y="4" width="18" height="16" rx="2.4" />
+                  <path d="M3 9.5h18" />
+                  <path d="M8.5 9.5V20" />
+                </svg>
+              }
+              @case ('code') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="m9 8-4 4 4 4" />
+                  <path d="m15 8 4 4-4 4" />
+                </svg>
+              }
+              @case ('app') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="3.5" y="3.5" width="7" height="7" rx="1.6" />
+                  <rect x="13.5" y="3.5" width="7" height="7" rx="1.6" />
+                  <rect x="3.5" y="13.5" width="7" height="7" rx="1.6" />
+                  <rect x="13.5" y="13.5" width="7" height="7" rx="1.6" />
+                </svg>
+              }
+              @case ('rocket') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path
+                    d="M12 15c4-1 7-4.5 7.5-10.5C13.5 5 10 8 9 12M12 15l-3-3M12 15l3 4.5-4.5-1L6 15l3.5-3.5"
+                  />
+                </svg>
+              }
+              @case ('support') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M12 8v4.3l3 1.7" />
+                </svg>
+              }
+              @case ('chat') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path
+                    d="M4 12a8 8 0 1 1 3.4 6.5L4 20l1.3-3.6A7.96 7.96 0 0 1 4 12Z"
+                  />
+                </svg>
+              }
+            }
+          </div>
+          <h3 class="service-title">{{ service.title }}</h3>
+          <p class="service-desc">{{ service.description }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>

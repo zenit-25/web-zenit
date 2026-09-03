@@ -1,0 +1,18 @@
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img class="brand-mark" src="assets/logo-icon.png" [alt]="site.brand" />
+      <span>{{ site.brand }}</span>
+    </div>
+
+    <p class="footer-note">
+      &copy; {{ year }} {{ site.brand }} — {{ site.name }}. Desarrollado con Angular.
+    </p>
+
+    <div class="footer-links">
+      <a [href]="'https://wa.me/' + site.whatsappNumber" target="_blank" rel="noopener">WhatsApp</a>
+      <a [href]="'mailto:' + site.email">Correo</a>
+      <a [href]="site.github" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>

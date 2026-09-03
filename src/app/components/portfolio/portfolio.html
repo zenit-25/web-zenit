@@ -1,0 +1,20 @@
+<section id="portafolio" class="section portfolio">
+  <div class="container">
+    <div class="section-head" appReveal>
+      <div class="eyebrow">Portafolio</div>
+      <h2 class="section-title">Proyectos que he desarrollado</h2>
+      <p class="section-subtitle">
+        Una muestra de sitios y sistemas web entregados a clientes reales. Este portafolio
+        sigue creciendo con cada proyecto nuevo.
+      </p>
+    </div>
+
+    <div class="portfolio-grid">
+      @for (project of projects; track project.id) {
+        <div appReveal>
+          <app-portfolio-card [project]="project" />
+        </div>
+      }
+    </div>
+  </div>
+</section>
