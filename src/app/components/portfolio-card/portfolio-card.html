@@ -4,7 +4,11 @@
   [attr.data-accent]="project().accent"
 >
   <div class="project-visual">
-    <span class="project-initial">{{ project().name.charAt(0) }}</span>
+    @if (project().image) {
+      <img class="project-image" [src]="project().image" [alt]="project().name" loading="lazy" />
+    } @else {
+      <span class="project-initial">{{ project().name.charAt(0) }}</span>
+    }
     @if (project().status === 'live') {
       <span class="status-dot" aria-hidden="true"></span>
     }

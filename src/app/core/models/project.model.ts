@@ -6,6 +6,7 @@ export interface Project {
   tags: string[];
   url?: string;
   repoUrl?: string;
+  image?: string;
   status: 'live' | 'in-progress' | 'coming-soon';
   accent: 'violet' | 'teal' | 'blue';
 }

@@ -20,15 +20,28 @@
 
 .project-visual {
   position: relative;
-  height: 140px;
+  aspect-ratio: 16 / 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   background:
     radial-gradient(120% 140% at 15% 0%, var(--accent-glow-1) 0%, transparent 60%),
     radial-gradient(120% 140% at 100% 100%, var(--accent-glow-2) 0%, transparent 55%),
     var(--bg-elevated);
   border-bottom: 1px solid var(--border);
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s var(--ease);
+}
+
+.project-card:hover .project-image {
+  transform: scale(1.04);
 }
 
 .project-card[data-accent='violet'] {
