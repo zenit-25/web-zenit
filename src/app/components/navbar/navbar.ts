@@ -20,7 +20,7 @@ export class Navbar {
 
   protected readonly links: NavLink[] = [
     { label: 'Inicio', fragment: 'inicio' },
-    { label: 'Sobre mí', fragment: 'sobre-mi' },
+    { label: 'Nosotros', fragment: 'sobre-mi' },
     { label: 'Servicios', fragment: 'servicios' },
     { label: 'Portafolio', fragment: 'portafolio' },
     { label: 'Contacto', fragment: 'contacto' },

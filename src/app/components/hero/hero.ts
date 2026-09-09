@@ -10,7 +10,7 @@ import { SITE, buildWhatsappLink } from '../../core/data/site.config';
 export class Hero {
   protected readonly site = SITE;
   protected readonly whatsappLink = buildWhatsappLink(
-    'Hola Kevin, quiero cotizar el desarrollo de un sitio web.',
+    'Hola, quiero cotizar el desarrollo de un sitio web con Zenit Digital.',
   );
 
   protected readonly stats = [
