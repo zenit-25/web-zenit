@@ -14,8 +14,8 @@ export class Hero {
   );
 
   protected readonly stats = [
-    { value: '3+', label: 'Sitios entregados' },
     { value: '100%', label: 'A la medida del cliente' },
+    { value: 'Directa', label: 'Comunicación con el cliente' },
     { value: 'Angular', label: 'Stack principal' },
   ];
 }
