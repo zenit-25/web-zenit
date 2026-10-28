@@ -1,0 +1,114 @@
+<div class="cfg-step-head">
+  <h2>Tu marca y estilo</h2>
+  <p>Así tu página se verá como parte de tu negocio desde el primer boceto.</p>
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">Logo</h3>
+  <div class="cfg-options">
+    @for (op of opcionesLogo; track op.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.marca.logo === op.id"
+        [class.is-selected]="s.marca.logo === op.id"
+        (click)="elegirLogo(op.id)"
+      >
+        <span class="cfg-option-title">{{ op.nombre }}</span>
+        <span class="cfg-option-text">{{ op.info }}</span>
+      </button>
+    }
+  </div>
+
+  @if (s.marca.logo === 'crear') {
+    <label class="cfg-field full cfg-block">
+      <span>¿Cómo te imaginas tu logo?</span>
+      <textarea
+        name="estiloLogo"
+        rows="3"
+        placeholder="Ej.: algo sencillo con una hoja, letras redondeadas, colores verde y beige. Si tienes referencias, menciónalas."
+        [(ngModel)]="s.marca.estiloLogo"
+      ></textarea>
+    </label>
+  }
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">Colores</h3>
+  <div class="cfg-options compact">
+    <button
+      type="button"
+      class="cfg-option"
+      [class.is-selected]="s.marca.usarColores"
+      (click)="usarColores(true)"
+    >
+      <span class="cfg-option-title">Tengo mis colores</span>
+      <span class="cfg-option-text">Los escojo yo o son los de mi logo.</span>
+    </button>
+    <button
+      type="button"
+      class="cfg-option"
+      [class.is-selected]="!s.marca.usarColores"
+      (click)="usarColores(false)"
+    >
+      <span class="cfg-option-title">Que Zenit los proponga</span>
+      <span class="cfg-option-text">Te sugerimos una paleta acorde a tu negocio.</span>
+    </button>
+  </div>
+
+  @if (s.marca.usarColores) {
+    <div class="cfg-grid cfg-block colores">
+      <label class="cfg-field color-field">
+        <span>Color principal</span>
+        <span class="color-input">
+          <input type="color" name="colorPrincipal" [(ngModel)]="s.marca.colorPrincipal" />
+          <code>{{ s.marca.colorPrincipal }}</code>
+        </span>
+      </label>
+      <label class="cfg-field color-field">
+        <span>Color secundario</span>
+        <span class="color-input">
+          <input type="color" name="colorSecundario" [(ngModel)]="s.marca.colorSecundario" />
+          <code>{{ s.marca.colorSecundario }}</code>
+        </span>
+      </label>
+      <div
+        class="color-preview full"
+        [style.background]="
+          'linear-gradient(120deg, ' + s.marca.colorPrincipal + ', ' + s.marca.colorSecundario + ')'
+        "
+      >
+        Así se combinan tus colores
+      </div>
+    </div>
+  }
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">Estilo visual</h3>
+  <app-info-tip titulo="¿Cómo escojo un estilo?">
+    El estilo define la sensación de tu página: tipografías, espacios y animaciones. Piensa en cómo
+    quieres que te perciban tus clientes. Si no estás seguro, elige «Que Zenit me recomiende».
+  </app-info-tip>
+  <div class="cfg-options compact">
+    @for (estilo of estilos; track estilo.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.marca.estilo === estilo.id"
+        [class.is-selected]="s.marca.estilo === estilo.id"
+        (click)="elegirEstilo(estilo.id)"
+      >
+        <span class="cfg-option-title">{{ estilo.nombre }}</span>
+        <span class="cfg-option-text">{{ estilo.info }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+<app-campo-comentario
+  [(valor)]="s.marca.comentario"
+  placeholder="Ej.: no me gustan los colores muy oscuros, o tengo un manual de marca."
+/>

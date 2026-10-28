@@ -1,0 +1,136 @@
+<div class="cfg-step-head">
+  <h2>Dominio y hosting</h2>
+  <p>Dónde vivirá tu página y con qué dirección la encontrarán tus clientes.</p>
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">Dominio</h3>
+  <app-info-tip titulo="¿Qué es un dominio?">
+    Es la dirección de tu página, por ejemplo <strong>tunegocio.com</strong>. Se paga cada año al
+    proveedor donde se compra y queda a tu nombre. Precios promedio por año (pueden variar según el
+    proveedor y las promociones):
+    <ul class="dominios">
+      @for (d of dominios; track d.extension) {
+        <li>
+          <strong>{{ d.extension }}</strong> · {{ d.precio }} — {{ d.info }}
+        </li>
+      }
+    </ul>
+  </app-info-tip>
+
+  <div class="cfg-options compact">
+    @for (op of opcionesDominio; track op.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.dominio.estado === op.id"
+        [class.is-selected]="s.dominio.estado === op.id"
+        (click)="elegirDominio(op.id)"
+      >
+        <span class="cfg-option-title">{{ op.nombre }}</span>
+        <span class="cfg-option-text">{{ op.info }}</span>
+      </button>
+    }
+  </div>
+
+  @if (s.dominio.estado === 'tengo') {
+    <div class="cfg-grid cfg-block">
+      <label class="cfg-field">
+        <span>¿Cuál es tu dominio?</span>
+        <input
+          type="text"
+          name="dominioActual"
+          placeholder="tunegocio.com"
+          [(ngModel)]="s.dominio.dominioActual"
+        />
+      </label>
+      <label class="cfg-field">
+        <span>¿Dónde lo compraste? <small>(si lo sabes)</small></span>
+        <input
+          type="text"
+          name="proveedor"
+          placeholder="GoDaddy, Hostinger, Namecheap..."
+          [(ngModel)]="s.dominio.proveedor"
+        />
+      </label>
+    </div>
+  }
+
+  @if (s.dominio.estado === 'necesito') {
+    <div class="cfg-grid cfg-block">
+      <label class="cfg-field">
+        <span>Dominio que te gustaría</span>
+        <input
+          type="text"
+          name="deseado"
+          placeholder="tunegocio.com"
+          [(ngModel)]="s.dominio.deseado"
+        />
+      </label>
+      <label class="cfg-field">
+        <span>Alternativas <small>(por si no está disponible)</small></span>
+        <input
+          type="text"
+          name="alternativas"
+          placeholder="tunegocio.co, tunegocioweb.com"
+          [(ngModel)]="s.dominio.alternativas"
+        />
+      </label>
+    </div>
+  }
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">¿Cuántas visitas esperas al mes?</h3>
+  <div class="cfg-options compact">
+    @for (op of opcionesTrafico; track op.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.hosting.trafico === op.id"
+        [class.is-selected]="s.hosting.trafico === op.id"
+        (click)="elegirTrafico(op.id)"
+      >
+        <span class="cfg-option-title">{{ op.nombre }}</span>
+        <span class="cfg-option-text">{{ op.info }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">¿Tu página necesita alguna de estas funciones?</h3>
+  <div class="cfg-options compact">
+    @for (n of necesidades; track n.campo) {
+      <button
+        type="button"
+        class="cfg-option is-check"
+        role="checkbox"
+        [attr.aria-checked]="s.hosting[n.campo]"
+        [class.is-selected]="s.hosting[n.campo]"
+        (click)="alternarNecesidad(n.campo)"
+      >
+        <span class="cfg-option-title">{{ n.nombre }}</span>
+        <span class="cfg-option-text">{{ n.info }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+<div class="cfg-note is-accent hosting-result">
+  <span class="hosting-label">Recomendación según lo que escogiste</span>
+  <strong class="hosting-name">{{ hosting.nivel.nombre }}</strong>
+  <p>{{ hosting.nivel.explicacion }}</p>
+  <p>
+    <small
+      >{{ hosting.nivel.costo }} La decisión final la confirmamos contigo en la cotización.</small
+    >
+  </p>
+</div>
+
+<app-campo-comentario
+  [(valor)]="s.dominio.comentario"
+  placeholder="Ej.: ya tengo hosting contratado, o necesito que la página aguante muchas visitas en temporada."
+/>

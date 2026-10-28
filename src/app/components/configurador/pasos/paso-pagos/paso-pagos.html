@@ -1,0 +1,116 @@
+<div class="cfg-step-head">
+  <h2>Pagos en línea</h2>
+  <p>
+    Trabajamos con <strong>Wompi</strong> para que recibas pagos de tus clientes directamente en tu
+    página.
+  </p>
+  <app-info-tip titulo="¿Qué es Wompi?">{{ wompi.descripcion }}</app-info-tip>
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">¿Necesitas recibir pagos en tu página?</h3>
+  <div class="cfg-options compact">
+    @for (op of opcionesRecibir; track op.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.pagos.recibir === op.id"
+        [class.is-selected]="s.pagos.recibir === op.id"
+        (click)="elegir('recibir', op.id)"
+      >
+        <span class="cfg-option-title">{{ op.nombre }}</span>
+        <span class="cfg-option-text">{{ op.info }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+@if (preguntaCuenta) {
+  <div class="cfg-block">
+    <h3 class="cfg-block-title">¿Ya tienes cuenta en Wompi?</h3>
+    <div class="cfg-options compact">
+      @for (op of opcionesCuenta; track op.id) {
+        <button
+          type="button"
+          class="cfg-option"
+          role="radio"
+          [attr.aria-checked]="s.pagos.cuentaWompi === op.id"
+          [class.is-selected]="s.pagos.cuentaWompi === op.id"
+          (click)="elegir('cuentaWompi', op.id)"
+        >
+          <span class="cfg-option-title">{{ op.nombre }}</span>
+          <span class="cfg-option-text">{{ op.info }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="cfg-block">
+    <h3 class="cfg-block-title">¿A nombre de quién recibirás los pagos?</h3>
+    <div class="cfg-options compact">
+      @for (op of opcionesTitular; track op.id) {
+        <button
+          type="button"
+          class="cfg-option"
+          role="radio"
+          [attr.aria-checked]="s.pagos.titular === op.id"
+          [class.is-selected]="s.pagos.titular === op.id"
+          (click)="elegir('titular', op.id)"
+        >
+          <span class="cfg-option-title">{{ op.nombre }}</span>
+          <span class="cfg-option-text">{{ op.info }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (s.pagos.cuentaWompi === 'crear' || s.pagos.cuentaWompi === 'ayuda') {
+    <div class="cfg-note is-accent">
+      <strong>
+        Lo que necesitas para crear tu cuenta Wompi
+        {{
+          s.pagos.titular === 'empresa'
+            ? 'como empresa'
+            : s.pagos.titular === 'natural'
+              ? 'como persona natural'
+              : ''
+        }}:
+      </strong>
+      @if (s.pagos.titular) {
+        <ul>
+          @for (
+            req of s.pagos.titular === 'empresa'
+              ? wompi.requisitos.empresa
+              : wompi.requisitos.natural;
+            track req
+          ) {
+            <li>{{ req }}</li>
+          }
+        </ul>
+      } @else {
+        <p>Escoge arriba a nombre de quién recibirás los pagos para ver la lista.</p>
+      }
+      @if (s.pagos.cuentaWompi === 'ayuda') {
+        <p class="note-extra">
+          Te acompañamos en el proceso, por ejemplo durante la reunión. Ten estos documentos a mano.
+        </p>
+      } @else {
+        <p class="note-extra">
+          Créala en <a [href]="wompi.url" target="_blank" rel="noopener">wompi.com</a> y avísanos
+          cuando esté aprobada.
+        </p>
+      }
+      <p class="note-extra">
+        <small>{{ wompi.nota }}</small>
+      </p>
+    </div>
+  }
+
+  <p class="cfg-note is-safe">🔒 {{ wompi.seguridad }}</p>
+}
+
+<app-campo-comentario
+  [(valor)]="s.pagos.comentario"
+  placeholder="Ej.: quiero recibir abonos, pagos por cuotas o vender varios productos a la vez."
+/>

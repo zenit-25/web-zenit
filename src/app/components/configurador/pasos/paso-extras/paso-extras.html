@@ -1,0 +1,25 @@
+<div class="cfg-step-head">
+  <h2>Extras para tu proyecto</h2>
+  <p>Servicios adicionales que puedes sumar ahora o más adelante. Cada uno se cotiza por aparte.</p>
+</div>
+
+<div class="cfg-options">
+  @for (extra of extras; track extra.id) {
+    <button
+      type="button"
+      class="cfg-option is-check"
+      role="checkbox"
+      [attr.aria-checked]="s.extras.seleccion.includes(extra.id)"
+      [class.is-selected]="s.extras.seleccion.includes(extra.id)"
+      (click)="store.alternar(s.extras.seleccion, extra.id)"
+    >
+      <span class="cfg-option-title">{{ extra.nombre }}</span>
+      <span class="cfg-option-text">{{ extra.info }}</span>
+    </button>
+  }
+</div>
+
+<app-campo-comentario
+  [(valor)]="s.extras.comentario"
+  placeholder="Ej.: necesito algo que no está en la lista, o quiero el mantenimiento solo por 6 meses."
+/>

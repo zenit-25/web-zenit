@@ -1,0 +1,150 @@
+<div class="cfg-step-head">
+  <h2>Revisa tu solicitud</h2>
+  <p>Verifica que todo esté bien. Puedes volver a cualquier paso con «Editar».</p>
+</div>
+
+<div class="resumen">
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Tus datos</span>
+      <p>{{ s.datos.nombre }}{{ s.datos.negocio ? ' · ' + s.datos.negocio : '' }}</p>
+      <p class="muted">{{ s.datos.whatsapp }}{{ s.datos.correo ? ' · ' + s.datos.correo : '' }}</p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(0)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Tipo de proyecto</span>
+      <p>{{ tipo }}</p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(1)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Secciones ({{ secciones.length }})</span>
+      <p>{{ secciones.length ? secciones.join(', ') : 'Ninguna' }}</p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(2)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Marca</span>
+      <p>
+        {{
+          s.marca.logo === 'tengo'
+            ? 'Tengo logo'
+            : s.marca.logo === 'crear'
+              ? 'Necesito un logo'
+              : s.marca.logo === 'no'
+                ? 'Sin logo'
+                : 'Logo sin definir'
+        }}
+        @if (s.marca.usarColores) {
+          · <span class="swatch" [style.background]="s.marca.colorPrincipal"></span>
+          <span class="swatch" [style.background]="s.marca.colorSecundario"></span>
+        }
+      </p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(3)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Pagos en línea</span>
+      <p>
+        {{
+          s.pagos.recibir === 'si'
+            ? 'Sí, con Wompi'
+            : s.pagos.recibir === 'despues'
+              ? 'Más adelante'
+              : s.pagos.recibir === 'no'
+                ? 'No'
+                : 'Sin definir'
+        }}
+      </p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(5)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Hosting recomendado</span>
+      <p>{{ hosting.nivel.nombre }}</p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(6)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Extras</span>
+      <p>{{ extras.length ? extras.join(', ') : 'Ninguno' }}</p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(7)">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Reunión</span>
+      <p>
+        {{
+          s.reunion.modalidad === 'presencial'
+            ? 'Presencial'
+            : s.reunion.modalidad === 'virtual'
+              ? 'Videollamada'
+              : s.reunion.modalidad === 'whatsapp'
+                ? 'Acordar por WhatsApp'
+                : 'Sin definir'
+        }}
+      </p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irA(8)">Editar</button>
+  </div>
+</div>
+
+<label class="cfg-field cfg-block">
+  <span>Comentario general <small>(opcional)</small></span>
+  <textarea
+    name="comentarioGeneral"
+    rows="3"
+    placeholder="Cualquier otra cosa que quieras contarnos sobre tu proyecto."
+    [(ngModel)]="s.comentarioGeneral"
+  ></textarea>
+</label>
+
+<div class="envio">
+  <h3>Envía tu solicitud</h3>
+  <ol>
+    <li>Descarga el archivo con todos los detalles de tu solicitud.</li>
+    <li>Abre WhatsApp con el resumen y <strong>adjunta el archivo</strong> en el chat.</li>
+    @if (s.marca.logo === 'tengo') {
+      <li>Adjunta también tu <strong>logo</strong> en el mismo chat.</li>
+    }
+  </ol>
+
+  <div class="envio-actions">
+    <button type="button" class="btn btn-ghost" (click)="descargar()">
+      {{ descargado() ? '✓ Archivo descargado' : '1. Descargar archivo .txt' }}
+    </button>
+    <button type="button" class="btn btn-primary" (click)="enviarWhatsapp()">
+      2. Enviar por WhatsApp
+    </button>
+  </div>
+  <p class="archivo muted">Archivo: {{ archivo }}</p>
+  <p class="muted proximamente">
+    Próximamente también podrás recibir tu solicitud en PDF y por correo.
+  </p>
+</div>
+
+<div class="extra-actions">
+  <button type="button" class="link-btn" (click)="verTexto.set(!verTexto())">
+    {{ verTexto() ? 'Ocultar' : 'Ver' }} el texto completo
+  </button>
+  <button type="button" class="link-btn danger" (click)="reiniciar()">Empezar de nuevo</button>
+</div>
+
+@if (verTexto()) {
+  <pre class="texto">{{ texto }}</pre>
+}

@@ -46,7 +46,7 @@ export const PROJECTS: Project[] = [
     name: 'Tu proyecto aquí',
     category: 'Próximamente',
     description:
-      'Este espacio está reservado para el siguiente proyecto. El portafolio crece con cada trabajo nuevo entregado a un cliente.',
+      'Este espacio está reservado para el siguiente proyecto. Arma tu página paso a paso y te mostramos un boceto de tu idea.',
     tags: ['Disponible'],
     status: 'coming-soon',
     accent: 'violet',

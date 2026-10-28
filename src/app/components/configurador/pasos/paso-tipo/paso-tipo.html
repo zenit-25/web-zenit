@@ -1,0 +1,42 @@
+<div class="cfg-step-head">
+  <h2>¿Qué tipo de página necesitas?</h2>
+  <p>
+    Escoge la opción que más se parezca a tu idea. En el siguiente paso podrás ajustar las
+    secciones.
+  </p>
+</div>
+
+<div class="cfg-options" role="radiogroup" aria-label="Tipo de proyecto">
+  @for (tipo of tipos; track tipo.id) {
+    <button
+      type="button"
+      class="cfg-option"
+      role="radio"
+      [attr.aria-checked]="s.proyecto.tipo === tipo.id"
+      [class.is-selected]="s.proyecto.tipo === tipo.id"
+      (click)="elegir(tipo)"
+    >
+      <span class="cfg-option-title">{{ tipo.nombre }}</span>
+      <span class="cfg-option-text">{{ tipo.info }}</span>
+      <span class="cfg-option-meta">Ideal para: {{ tipo.ideal }}</span>
+    </button>
+  }
+</div>
+
+@for (tipo of tipos; track tipo.id) {
+  @if (s.proyecto.tipo === tipo.id && tipo.ejemplo) {
+    <p class="cfg-note is-accent">
+      Mira un proyecto real de este tipo que hicimos:
+      <a [href]="tipo.ejemplo.url" target="_blank" rel="noopener">{{ tipo.ejemplo.nombre }}</a>
+    </p>
+  }
+}
+
+@if (store.mostrarErrores() && !store.pasoValido(1)) {
+  <p class="cfg-note is-accent">Escoge un tipo de proyecto para continuar.</p>
+}
+
+<app-campo-comentario
+  [(valor)]="s.proyecto.comentario"
+  placeholder="Ej.: quiero algo parecido a la página de otra marca que me gusta (pon el enlace)."
+/>

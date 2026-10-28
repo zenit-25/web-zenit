@@ -1,0 +1,98 @@
+<section class="configurador cfg">
+  <div class="container">
+    <header class="cfg-hero">
+      <div class="eyebrow">Diseña tu página</div>
+      <h1 class="section-title">
+        Arma tu página web <span class="gradient-text">a tu medida</span>
+      </h1>
+      <p class="section-subtitle">
+        Escoge lo que necesitas paso a paso. Al final nos envías tu solicitud por WhatsApp y te
+        preparamos un boceto para mostrártelo en una reunión.
+      </p>
+      <p class="cfg-meta">
+        <span class="tag">Código {{ store.solicitud.codigo }}</span>
+        <span class="tag">Tu avance se guarda automáticamente</span>
+      </p>
+    </header>
+
+    <div class="cfg-layout">
+      <aside class="cfg-sidebar" aria-label="Pasos del configurador">
+        <div class="cfg-progress">
+          <div class="cfg-progress-text">
+            <span>Paso {{ store.paso() + 1 }} de {{ store.totalPasos }}</span>
+            <span>{{ progreso }}%</span>
+          </div>
+          <div class="cfg-progress-bar"><span [style.width.%]="progreso"></span></div>
+        </div>
+
+        <ol class="cfg-steps">
+          @for (paso of pasos; track paso.id; let i = $index) {
+            <li>
+              <button
+                type="button"
+                [class.is-active]="store.paso() === i"
+                [class.is-done]="i < store.paso()"
+                [attr.aria-current]="store.paso() === i ? 'step' : null"
+                (click)="irA(i)"
+              >
+                <span class="cfg-step-num">{{ i < store.paso() ? '✓' : i + 1 }}</span>
+                {{ paso.titulo }}
+              </button>
+            </li>
+          }
+        </ol>
+      </aside>
+
+      <div class="card cfg-panel" #panel (input)="store.guardar()" (change)="store.guardar()">
+        @switch (store.paso()) {
+          @case (0) {
+            <app-paso-datos />
+          }
+          @case (1) {
+            <app-paso-tipo />
+          }
+          @case (2) {
+            <app-paso-secciones />
+          }
+          @case (3) {
+            <app-paso-marca />
+          }
+          @case (4) {
+            <app-paso-contacto />
+          }
+          @case (5) {
+            <app-paso-pagos />
+          }
+          @case (6) {
+            <app-paso-dominio />
+          }
+          @case (7) {
+            <app-paso-extras />
+          }
+          @case (8) {
+            <app-paso-reunion />
+          }
+          @case (9) {
+            <app-paso-resumen />
+          }
+        }
+
+        <footer class="cfg-nav">
+          <button
+            type="button"
+            class="btn btn-ghost"
+            [disabled]="store.paso() === 0"
+            (click)="anterior()"
+          >
+            Anterior
+          </button>
+          @if (!store.esUltimo()) {
+            <button type="button" class="btn btn-primary" (click)="siguiente()">
+              Siguiente: {{ pasos[store.paso() + 1].titulo }}
+            </button>
+          }
+        </footer>
+      </div>
+    </div>
+  </div>
+</section>

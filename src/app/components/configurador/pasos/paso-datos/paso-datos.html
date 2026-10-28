@@ -1,0 +1,82 @@
+<div class="cfg-step-head">
+  <h2>Cuéntanos sobre ti</h2>
+  <p>Con estos datos te contactamos para mostrarte el boceto de tu página.</p>
+</div>
+
+<div class="cfg-grid">
+  <label class="cfg-field" [class.is-invalid]="store.mostrarErrores() && !s.datos.nombre.trim()">
+    <span>Nombre completo <span class="req">*</span></span>
+    <input
+      type="text"
+      name="nombre"
+      autocomplete="name"
+      placeholder="Tu nombre"
+      [(ngModel)]="s.datos.nombre"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>Nombre del negocio o marca</span>
+    <input
+      type="text"
+      name="negocio"
+      autocomplete="organization"
+      placeholder="Ej.: Panadería La Esquina"
+      [(ngModel)]="s.datos.negocio"
+    />
+  </label>
+
+  <label class="cfg-field" [class.is-invalid]="store.mostrarErrores() && !s.datos.whatsapp.trim()">
+    <span>WhatsApp <span class="req">*</span></span>
+    <input
+      type="tel"
+      name="whatsapp"
+      autocomplete="tel"
+      placeholder="300 000 0000"
+      [(ngModel)]="s.datos.whatsapp"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>Correo electrónico</span>
+    <input
+      type="email"
+      name="correo"
+      autocomplete="email"
+      placeholder="tucorreo@ejemplo.com"
+      [(ngModel)]="s.datos.correo"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>Ciudad</span>
+    <input
+      type="text"
+      name="ciudad"
+      autocomplete="address-level2"
+      placeholder="Ej.: Bucaramanga"
+      [(ngModel)]="s.datos.ciudad"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>¿Ya tienes página web? <small>(enlace, opcional)</small></span>
+    <input
+      type="url"
+      name="sitioActual"
+      placeholder="https://..."
+      [(ngModel)]="s.datos.sitioActual"
+    />
+  </label>
+</div>
+
+@if (store.mostrarErrores() && !store.pasoValido(0)) {
+  <p class="cfg-note is-accent">
+    Completa tu <strong>nombre</strong> y tu <strong>WhatsApp</strong> para continuar.
+  </p>
+}
+
+<app-campo-comentario
+  [(valor)]="s.datos.comentario"
+  placeholder="Ej.: prefiero que me contacten en la tarde."
+/>

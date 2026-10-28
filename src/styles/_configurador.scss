@@ -1,0 +1,344 @@
+/* ==========================================================================
+   Configurador "Diseña tu página" — estilos compartidos por todos los pasos
+   ========================================================================== */
+
+.cfg {
+  input[type='text'],
+  input[type='tel'],
+  input[type='email'],
+  input[type='url'],
+  input[type='date'],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition:
+      border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input[type='date'] {
+    color-scheme: dark;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-faint);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+}
+
+.cfg-step-head {
+  margin-bottom: 26px;
+}
+
+.cfg-step-head h2 {
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+}
+
+.cfg-step-head p {
+  margin-top: 8px;
+  color: var(--text-muted);
+}
+
+.cfg-block {
+  margin-top: 28px;
+}
+
+.cfg-block-title {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+.cfg-block-title + .cfg-options,
+.cfg-block-title + .cfg-grid {
+  margin-top: 14px;
+}
+
+.cfg-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cfg-field {
+  display: grid;
+  gap: 7px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.cfg-field.full {
+  grid-column: 1 / -1;
+}
+
+.cfg-field .req {
+  color: var(--accent-2);
+}
+
+.cfg-field small {
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.cfg-field.is-invalid input {
+  border-color: var(--danger);
+}
+
+.cfg-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.cfg-options.compact {
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+}
+
+.cfg-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 16px 16px 46px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  text-align: left;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.cfg-option:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+/* Indicador de selección (círculo para radio, cuadro para check) */
+.cfg-option::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  transition: all 0.2s var(--ease);
+}
+
+.cfg-option.is-check::before {
+  border-radius: 5px;
+}
+
+.cfg-option.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.cfg-option.is-selected::before {
+  border-color: transparent;
+  background: var(--accent-gradient);
+  box-shadow: inset 0 0 0 4px var(--surface);
+}
+
+.cfg-option.is-check.is-selected::before {
+  box-shadow: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2308080c' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E")
+      center / 12px no-repeat,
+    var(--accent-gradient);
+}
+
+.cfg-option input[type='radio'],
+.cfg-option input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cfg-option-title {
+  font-weight: 600;
+}
+
+.cfg-option-text {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.cfg-option-meta {
+  color: var(--accent-2);
+  font-size: 0.78rem;
+}
+
+.cfg-note {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.cfg-note strong {
+  color: var(--text);
+}
+
+.cfg-note.is-accent {
+  border-color: rgba(124, 92, 255, 0.4);
+  background: var(--accent-soft);
+}
+
+.cfg-note.is-safe {
+  border-color: rgba(53, 227, 196, 0.35);
+  background: rgba(53, 227, 196, 0.06);
+}
+
+.cfg-note ul {
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.cfg-note li {
+  position: relative;
+  padding-left: 22px;
+}
+
+.cfg-note li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.cfg-note a {
+  color: var(--accent-2);
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .cfg-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cfg-options,
+  .cfg-options.compact {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Piezas pequeñas compartidas ---------- */
+.cfg-grid.cfg-block,
+.cfg-field.cfg-block {
+  margin-top: 18px;
+}
+
+.muted {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.link-btn {
+  justify-self: start;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent-2);
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.link-btn.danger {
+  color: var(--danger);
+}
+
+.color-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.color-input input[type='color'] {
+  width: 52px;
+  height: 42px;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  cursor: pointer;
+}
+
+.color-input code {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.color-preview {
+  grid-column: 1 / -1;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.cfg-note .note-extra {
+  margin-top: 10px;
+}
+
+.info-body .dominios {
+  margin-top: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.hosting-result {
+  display: grid;
+  gap: 6px;
+}
+
+.hosting-label {
+  color: var(--text-faint);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hosting-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}

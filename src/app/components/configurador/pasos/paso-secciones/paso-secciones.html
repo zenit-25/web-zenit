@@ -1,0 +1,38 @@
+<div class="cfg-step-head">
+  <h2>Arma tu página por secciones</h2>
+  <p>
+    Marca las partes que quieres en tu página. Ya dejamos seleccionadas las más comunes para tu tipo
+    de proyecto; puedes quitar o agregar las que quieras.
+  </p>
+  <app-info-tip titulo="¿Qué es una sección?">
+    Una sección es un bloque de tu página, como la portada, los servicios o el mapa. El visitante
+    las recorre de arriba hacia abajo. Más secciones no siempre es mejor: lo ideal es mostrar solo
+    lo que ayuda a tu cliente a decidir.
+  </app-info-tip>
+</div>
+
+<div class="cfg-options">
+  @for (seccion of secciones; track seccion.id) {
+    <button
+      type="button"
+      class="cfg-option is-check"
+      role="checkbox"
+      [attr.aria-checked]="s.secciones.seleccion.includes(seccion.id)"
+      [class.is-selected]="s.secciones.seleccion.includes(seccion.id)"
+      (click)="store.alternar(s.secciones.seleccion, seccion.id)"
+    >
+      <span class="cfg-option-title">{{ seccion.nombre }}</span>
+      <span class="cfg-option-text">{{ seccion.info }}</span>
+    </button>
+  }
+</div>
+
+<p class="cfg-note">
+  Seleccionaste <strong>{{ s.secciones.seleccion.length }}</strong>
+  {{ s.secciones.seleccion.length === 1 ? 'sección' : 'secciones' }}.
+</p>
+
+<app-campo-comentario
+  [(valor)]="s.secciones.comentario"
+  placeholder="Ej.: en la galería quiero videos, o necesito una sección que no está en la lista."
+/>

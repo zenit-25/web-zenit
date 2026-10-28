@@ -1,0 +1,181 @@
+.configurador {
+  padding-top: calc(var(--header-h) + clamp(32px, 6vw, 64px));
+  padding-bottom: clamp(64px, 10vw, 110px);
+}
+
+.cfg-hero {
+  max-width: 720px;
+  margin-bottom: clamp(32px, 5vw, 48px);
+}
+
+.cfg-hero h1 {
+  font-size: clamp(2rem, 4.4vw, 3rem);
+}
+
+.cfg-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.cfg-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.cfg-sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + 20px);
+}
+
+.cfg-progress {
+  margin-bottom: 18px;
+}
+
+.cfg-progress-text {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.cfg-progress-bar {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.cfg-progress-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent-gradient);
+  transition: width 0.4s var(--ease);
+}
+
+.cfg-steps {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cfg-steps button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  text-align: left;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.cfg-steps button:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.cfg-steps button.is-active {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.cfg-step-num {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.is-active .cfg-step-num {
+  border-color: transparent;
+  background: var(--accent-gradient);
+  color: #08080c;
+}
+
+.is-done .cfg-step-num {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+.cfg-panel {
+  padding: clamp(22px, 4vw, 40px);
+}
+
+.cfg-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.cfg-nav .btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .cfg-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cfg-sidebar {
+    position: static;
+  }
+
+  /* En pantallas pequeñas los pasos se muestran como una fila desplazable */
+  .cfg-steps {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .cfg-steps button {
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+
+  .cfg-steps button:not(.is-active) {
+    font-size: 0;
+    gap: 0;
+    padding: 6px;
+  }
+
+  .cfg-steps button:not(.is-active) .cfg-step-num {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .cfg-nav {
+    flex-direction: column-reverse;
+  }
+
+  .cfg-nav .btn {
+    width: 100%;
+    white-space: normal;
+  }
+}

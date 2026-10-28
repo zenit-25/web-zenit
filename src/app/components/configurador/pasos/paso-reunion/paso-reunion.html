@@ -1,0 +1,86 @@
+<div class="cfg-step-head">
+  <h2>Agendemos una reunión</h2>
+  <p>
+    Con tu solicitud preparamos un <strong>boceto de tu página</strong> y te lo mostramos para
+    ajustar detalles, definir el precio y la fecha de inicio.
+  </p>
+  <app-info-tip titulo="¿Cómo funciona?">
+    1. Revisamos tu solicitud. 2. Te confirmamos la cita por WhatsApp. 3. Preparamos el boceto con
+    tus colores y secciones. 4. En la reunión lo ajustamos y te entregamos la cotización final. 5.
+    Con el anticipo empezamos tu proyecto.
+  </app-info-tip>
+</div>
+
+<div class="cfg-block">
+  <h3 class="cfg-block-title">¿Cómo prefieres reunirte?</h3>
+  <div class="cfg-options compact">
+    @for (m of modalidades; track m.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.reunion.modalidad === m.id"
+        [class.is-selected]="s.reunion.modalidad === m.id"
+        (click)="elegirModalidad(m.id)"
+      >
+        <span class="cfg-option-title">{{ m.nombre }}</span>
+        <span class="cfg-option-text">{{ m.info }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+@if (s.reunion.modalidad && s.reunion.modalidad !== 'whatsapp') {
+  <div class="cfg-block">
+    <h3 class="cfg-block-title">
+      Fechas que te sirven <small class="muted">(escoge hasta tres)</small>
+    </h3>
+    <div class="cfg-grid fechas">
+      @for (i of [0, 1, 2]; track i) {
+        <label class="cfg-field">
+          <span>Opción {{ i + 1 }}</span>
+          <input type="date" [name]="'fecha' + i" [min]="hoy" [(ngModel)]="s.reunion.fechas[i]" />
+        </label>
+      }
+    </div>
+  </div>
+
+  <div class="cfg-block">
+    <h3 class="cfg-block-title">Franja horaria</h3>
+    <div class="cfg-options compact">
+      @for (f of franjas; track f.id) {
+        <button
+          type="button"
+          class="cfg-option"
+          role="radio"
+          [attr.aria-checked]="s.reunion.franja === f.id"
+          [class.is-selected]="s.reunion.franja === f.id"
+          (click)="elegirFranja(f.id)"
+        >
+          <span class="cfg-option-title">{{ f.nombre }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (s.reunion.modalidad === 'presencial') {
+    <label class="cfg-field cfg-block">
+      <span>¿Dónde nos vemos?</span>
+      <input
+        type="text"
+        name="lugar"
+        placeholder="Dirección de tu negocio o un punto de encuentro"
+        [(ngModel)]="s.reunion.lugar"
+      />
+    </label>
+  }
+}
+
+<p class="cfg-note">
+  Te confirmaremos la cita por WhatsApp. Las fechas son tentativas hasta que las acordemos.
+</p>
+
+<app-campo-comentario
+  [(valor)]="s.reunion.comentario"
+  placeholder="Ej.: solo puedo después de las 5 p.m., o quiero que esté mi socio en la reunión."
+/>

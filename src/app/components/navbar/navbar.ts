@@ -1,5 +1,6 @@
 import { Component, HostListener, signal } from '@angular/core';
-import { SITE, buildWhatsappLink } from '../../core/data/site.config';
+import { RouterLink } from '@angular/router';
+import { SITE } from '../../core/data/site.config';
 
 interface NavLink {
   label: string;
@@ -8,7 +9,7 @@ interface NavLink {
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
@@ -16,7 +17,6 @@ export class Navbar {
   protected readonly isScrolled = signal(false);
   protected readonly isMenuOpen = signal(false);
   protected readonly site = SITE;
-  protected readonly whatsappLink = buildWhatsappLink();
 
   protected readonly links: NavLink[] = [
     { label: 'Inicio', fragment: 'inicio' },

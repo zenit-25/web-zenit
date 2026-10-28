@@ -1,0 +1,91 @@
+<div class="cfg-step-head">
+  <h2>Datos de contacto y redes para tu página</h2>
+  <p>Esta es la información que verán tus clientes. Llena solo lo que quieras mostrar.</p>
+  <app-info-tip titulo="¿Dónde aparece esta información?">
+    El número de WhatsApp se usa en el botón flotante y en los botones de «Escríbenos». Las redes
+    van en el encabezado o en el pie de página, y la dirección y el horario en la sección de
+    contacto o junto al mapa.
+  </app-info-tip>
+</div>
+
+<div class="cfg-grid">
+  <label class="cfg-field">
+    <span>WhatsApp para el botón de la página</span>
+    <input
+      type="tel"
+      name="whatsappBoton"
+      placeholder="300 000 0000"
+      [(ngModel)]="s.contacto.whatsappBoton"
+    />
+    @if (s.datos.whatsapp && s.contacto.whatsappBoton !== s.datos.whatsapp) {
+      <button type="button" class="link-btn" (click)="usarMiWhatsapp()">
+        Usar el mismo de mis datos
+      </button>
+    }
+  </label>
+
+  <label class="cfg-field">
+    <span>Correo de contacto</span>
+    <input
+      type="email"
+      name="correoContacto"
+      placeholder="ventas@tunegocio.com"
+      [(ngModel)]="s.contacto.correoContacto"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>Instagram</span>
+    <input
+      type="text"
+      name="instagram"
+      placeholder="@tunegocio o enlace"
+      [(ngModel)]="s.contacto.instagram"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>Facebook</span>
+    <input
+      type="text"
+      name="facebook"
+      placeholder="Nombre de la página o enlace"
+      [(ngModel)]="s.contacto.facebook"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>TikTok</span>
+    <input type="text" name="tiktok" placeholder="@tunegocio" [(ngModel)]="s.contacto.tiktok" />
+  </label>
+
+  <label class="cfg-field">
+    <span>Otra red <small>(YouTube, LinkedIn...)</small></span>
+    <input type="text" name="otraRed" placeholder="Enlace" [(ngModel)]="s.contacto.otraRed" />
+  </label>
+
+  <label class="cfg-field">
+    <span>Dirección del local u oficina</span>
+    <input
+      type="text"
+      name="direccion"
+      placeholder="Calle 00 # 00-00, barrio, ciudad"
+      [(ngModel)]="s.contacto.direccion"
+    />
+  </label>
+
+  <label class="cfg-field">
+    <span>Horario de atención</span>
+    <input
+      type="text"
+      name="horario"
+      placeholder="Lun a sáb, 8:00 a.m. – 6:00 p.m."
+      [(ngModel)]="s.contacto.horario"
+    />
+  </label>
+</div>
+
+<app-campo-comentario
+  [(valor)]="s.contacto.comentario"
+  placeholder="Ej.: tengo dos sedes, o quiero mostrar un número distinto para pedidos."
+/>

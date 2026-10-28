@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  margin-block: 10px 4px;
+}
+
+.info-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent-2);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.info-toggle:hover {
+  text-decoration: underline;
+}
+
+.info-icon {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.info-body {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(53, 227, 196, 0.06);
+  border: 1px solid rgba(53, 227, 196, 0.25);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
