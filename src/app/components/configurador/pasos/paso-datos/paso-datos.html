@@ -1,16 +1,23 @@
 <div class="cfg-step-head">
   <h2>¿A quién le enviamos el boceto?</h2>
-  <p>Ya armaste tu página. Déjanos tus datos para contactarte y mostrarte el boceto.</p>
+  <p>
+    Ya armaste tu página. Déjanos tus datos para guardar tu solicitud, contactarte y mostrarte el
+    boceto. Los campos con <span class="req">*</span> son obligatorios.
+  </p>
 </div>
 
 <div class="cfg-grid">
-  <label class="cfg-field" [class.is-invalid]="store.mostrarErrores() && !s.datos.nombre.trim()">
+  <label
+    class="cfg-field"
+    [class.is-invalid]="store.mostrarErrores() && s.datos.nombre.trim().length < 2"
+  >
     <span>Nombre completo <span class="req">*</span></span>
     <input
       type="text"
       name="nombre"
       autocomplete="name"
       placeholder="Tu nombre"
+      required
       [(ngModel)]="s.datos.nombre"
     />
   </label>
@@ -26,13 +33,17 @@
     />
   </label>
 
-  <label class="cfg-field" [class.is-invalid]="store.mostrarErrores() && !s.datos.whatsapp.trim()">
+  <label
+    class="cfg-field"
+    [class.is-invalid]="store.mostrarErrores() && !whatsappValido(s.datos.whatsapp)"
+  >
     <span>WhatsApp <span class="req">*</span></span>
     <input
       type="tel"
       name="whatsapp"
       autocomplete="tel"
       placeholder="300 000 0000"
+      required
       [(ngModel)]="s.datos.whatsapp"
     />
     @if (s.contacto.whatsappBoton && s.datos.whatsapp !== s.contacto.whatsappBoton) {
@@ -42,7 +53,22 @@
     }
   </label>
 
-  <label class="cfg-field">
+  <label
+    class="cfg-field"
+    [class.is-invalid]="store.mostrarErrores() && s.datos.ciudad.trim().length < 2"
+  >
+    <span>Ciudad <span class="req">*</span></span>
+    <input
+      type="text"
+      name="ciudad"
+      autocomplete="address-level2"
+      placeholder="Ej.: Bucaramanga"
+      required
+      [(ngModel)]="s.datos.ciudad"
+    />
+  </label>
+
+  <label class="cfg-field full">
     <span>Correo electrónico</span>
     <input
       type="email"
@@ -53,21 +79,44 @@
     />
   </label>
 
-  <label class="cfg-field">
-    <span>Ciudad</span>
+  <!-- Campo trampa anti-spam: invisible para las personas -->
+  <label class="campo-trampa" aria-hidden="true">
+    Sitio web
     <input
       type="text"
-      name="ciudad"
-      autocomplete="address-level2"
-      placeholder="Ej.: Bucaramanga"
-      [(ngModel)]="s.datos.ciudad"
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
+      [value]="store.trampa()"
+      (input)="store.trampa.set($any($event.target).value)"
     />
   </label>
 </div>
 
+<button
+  type="button"
+  class="autorizacion"
+  role="checkbox"
+  [attr.aria-checked]="s.datos.autorizacion"
+  [class.is-selected]="s.datos.autorizacion"
+  [class.is-invalid]="store.mostrarErrores() && !s.datos.autorizacion"
+  (click)="alternarAutorizacion()"
+>
+  <span class="check" aria-hidden="true"></span>
+  <span>
+    Autorizo a {{ marca }} a guardar y usar mis datos para contactarme sobre esta solicitud, según
+    la
+    <a routerLink="/privacidad" target="_blank" (click)="$event.stopPropagation()"
+      >política de tratamiento de datos</a
+    >.
+    <span class="req">*</span>
+  </span>
+</button>
+
 @if (store.mostrarErrores() && !store.pasoValido(store.paso())) {
   <p class="cfg-note is-accent">
-    Completa tu <strong>nombre</strong> y tu <strong>WhatsApp</strong> para continuar.
+    Completa tu <strong>nombre</strong>, un <strong>WhatsApp</strong> válido y tu
+    <strong>ciudad</strong>, y acepta la autorización de datos para continuar.
   </p>
 }
 

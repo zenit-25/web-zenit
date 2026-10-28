@@ -41,8 +41,52 @@
   border: 1px solid var(--border-strong);
 }
 
+.registro {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 26px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.registro.is-ok {
+  border-color: rgba(53, 227, 196, 0.4);
+  color: var(--text);
+}
+
+.registro.is-error {
+  border-color: rgba(255, 92, 122, 0.45);
+}
+
+.registro-icono {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--border);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.is-ok .registro-icono {
+  background: var(--accent-2);
+  color: #08080c;
+}
+
+.is-error .registro-icono {
+  background: var(--danger);
+  color: #08080c;
+}
+
 .envio {
-  margin-top: 30px;
+  margin-top: 22px;
   padding: 24px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(124, 92, 255, 0.4);

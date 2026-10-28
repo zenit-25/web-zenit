@@ -1,0 +1,161 @@
+<section class="adm">
+  <div class="container">
+    <a class="link-btn adm-volver" routerLink="/admin">← Todas las solicitudes</a>
+
+    @if (error()) {
+      <p class="adm-error" role="alert">{{ error() }}</p>
+    }
+
+    @if (solicitud(); as d) {
+      <header class="adm-head">
+        <div>
+          <div class="eyebrow">{{ d.codigo }}</div>
+          <h1>
+            {{ d.nombre }}
+            @if (d.negocio) {
+              <span class="muted"> · {{ d.negocio }}</span>
+            }
+          </h1>
+          <p class="muted">
+            {{ d.ciudad }} · Recibida {{ fecha(d.creada) }}
+            @if (fecha(d.actualizada) !== fecha(d.creada)) {
+              · Actualizada {{ fecha(d.actualizada) }}
+            }
+          </p>
+        </div>
+        <div class="adm-head-actions">
+          <a
+            class="btn btn-primary btn-sm"
+            [href]="whatsappCliente(d)"
+            target="_blank"
+            rel="noopener"
+          >
+            Escribir por WhatsApp
+          </a>
+          @if (d.correo) {
+            <a class="btn btn-ghost btn-sm" [href]="'mailto:' + d.correo">Enviar correo</a>
+          }
+          <button type="button" class="btn btn-ghost btn-sm" (click)="pdf(d)">Ver PDF</button>
+        </div>
+      </header>
+
+      <div class="adm-detalle">
+        <div class="adm-col">
+          @for (b of bloques(); track b.titulo; let i = $index) {
+            <article class="card adm-bloque">
+              <h2>
+                <span class="adm-num">{{ i + 1 }}</span
+                >{{ b.titulo }}
+              </h2>
+              @if (b.filas.length) {
+                <dl>
+                  @for (f of b.filas; track f[0]) {
+                    <dt>{{ f[0] }}</dt>
+                    <dd>{{ f[1] }}</dd>
+                  }
+                </dl>
+              }
+              @if (b.lista) {
+                @if (b.listaTitulo) {
+                  <h3>{{ b.listaTitulo }}</h3>
+                }
+                @if (b.lista.length) {
+                  <ul>
+                    @for (item of b.lista; track item) {
+                      <li>{{ item }}</li>
+                    }
+                  </ul>
+                } @else {
+                  <p class="muted">Ninguno</p>
+                }
+              }
+              @if (b.colores?.length) {
+                <div class="adm-colores">
+                  @for (c of b.colores; track $index) {
+                    <span class="adm-color">
+                      <i [style.background]="c.hex"></i>
+                      <code>{{ c.hex }}</code>
+                      <small>{{ c.uso }}</small>
+                    </span>
+                  }
+                </div>
+              }
+              @if (b.comentario) {
+                <blockquote>{{ b.comentario }}</blockquote>
+              }
+            </article>
+          }
+          @if (d.datos.comentarioGeneral) {
+            <article class="card adm-bloque">
+              <h2>Comentario general</h2>
+              <blockquote>{{ d.datos.comentarioGeneral }}</blockquote>
+            </article>
+          }
+        </div>
+
+        <aside class="adm-col adm-lateral">
+          <div class="card adm-bloque">
+            <h2>Estado</h2>
+            <div class="adm-estados">
+              @for (e of estados; track e.id) {
+                <button
+                  type="button"
+                  class="adm-chip"
+                  [class.is-active]="d.estado === e.id"
+                  [style.--chip]="e.color"
+                  [disabled]="guardando()"
+                  (click)="cambiarEstado(e.id)"
+                >
+                  <i class="dot"></i>{{ e.nombre }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="card adm-bloque">
+            <h2>Notas internas</h2>
+            <p class="muted adm-ayuda">Solo las ves tú; el cliente nunca las recibe.</p>
+            <textarea
+              rows="6"
+              name="notas"
+              placeholder="Ej.: llamar el lunes, presupuesto aproximado, acuerdos de la reunión..."
+              [(ngModel)]="notas"
+              (ngModelChange)="notasGuardadas.set(false)"
+            ></textarea>
+            <button
+              type="button"
+              class="btn btn-ghost btn-sm"
+              [disabled]="guardando() || notasGuardadas()"
+              (click)="guardarNotas()"
+            >
+              {{ notasGuardadas() ? 'Notas guardadas' : 'Guardar notas' }}
+            </button>
+          </div>
+
+          <div class="card adm-bloque">
+            <h2>Hosting sugerido</h2>
+            <p>{{ d.hosting_nivel || 'Sin calcular' }}</p>
+            <p class="muted">Puntaje {{ d.hosting_puntos }}</p>
+          </div>
+
+          @if (tareas().length) {
+            <div class="card adm-bloque">
+              <h2>Próximos pasos</h2>
+              <ul>
+                @for (t of tareas(); track t) {
+                  <li>{{ t }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <p class="muted adm-ayuda">
+            Autorizó el tratamiento de datos el {{ fecha(d.autorizacion_datos) }}.
+          </p>
+        </aside>
+      </div>
+    } @else if (!error()) {
+      <p class="adm-vacio">Cargando solicitud...</p>
+    }
+  </div>
+</section>

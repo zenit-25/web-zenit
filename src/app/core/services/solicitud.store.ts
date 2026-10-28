@@ -20,10 +20,20 @@ export const PASOS = [
 
 export type PasoId = (typeof PASOS)[number]['id'];
 
-function generarCodigo(): string {
+const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+export function generarCodigo(): string {
   const fecha = new Date().toISOString().slice(0, 10).replaceAll('-', '');
-  const aleatorio = Math.random().toString(36).slice(2, 6).toUpperCase();
+  const aleatorio = Array.from(
+    crypto.getRandomValues(new Uint8Array(6)),
+    (n) => ALFABETO[n % ALFABETO.length],
+  ).join('');
   return `ZD-${fecha}-${aleatorio}`;
+}
+
+/** WhatsApp con al menos 7 dígitos (fijo o celular, con o sin indicativo). */
+export function whatsappValido(numero: string): boolean {
+  return numero.replace(/\D/g, '').length >= 7;
 }
 
 function horarioInicial(): DiaHorario[] {
@@ -41,6 +51,7 @@ function horarioInicial(): DiaHorario[] {
 function solicitudVacia(): Solicitud {
   return {
     codigo: generarCodigo(),
+    token: crypto.randomUUID(),
     creada: new Date().toISOString(),
     datos: {
       nombre: '',
@@ -48,6 +59,7 @@ function solicitudVacia(): Solicitud {
       ciudad: '',
       whatsapp: '',
       correo: '',
+      autorizacion: false,
       comentario: '',
     },
     proyecto: { tipo: '', comentario: '' },
@@ -97,6 +109,21 @@ function solicitudVacia(): Solicitud {
   };
 }
 
+/** Completa campos que falten (solicitudes guardadas con una versión anterior). */
+export function completarSolicitud(datos: unknown): Solicitud {
+  const base = solicitudVacia();
+  const origen = (datos ?? {}) as Record<string, unknown>;
+  for (const key of Object.keys(base) as (keyof Solicitud)[]) {
+    const valor = origen[key];
+    if (valor === undefined || valor === null) continue;
+    (base as unknown as Record<string, unknown>)[key] =
+      typeof valor === 'object' && !Array.isArray(valor)
+        ? { ...(base[key] as object), ...valor }
+        : valor;
+  }
+  return base;
+}
+
 /**
  * Estado del configurador. La solicitud es un objeto mutable (se edita con
  * ngModel) y se guarda en localStorage para no perder el avance.
@@ -109,6 +136,8 @@ export class SolicitudStore {
   readonly esUltimo = computed(() => this.paso() === this.totalPasos - 1);
   /** Se activa cuando el cliente intenta avanzar con datos obligatorios vacíos. */
   readonly mostrarErrores = signal(false);
+  /** Campo trampa anti-spam: no se guarda ni se muestra a las personas. */
+  readonly trampa = signal('');
 
   constructor() {
     const guardado = this.leer();
@@ -126,12 +155,20 @@ export class SolicitudStore {
     this.guardar();
   }
 
-  /** Solo el tipo de proyecto y los datos de contacto son obligatorios. */
+  /** Obligatorios: tipo de proyecto, nombre, WhatsApp, ciudad y la autorización de datos. */
   pasoValido(paso: number): boolean {
     const s = this.solicitud;
     const id = PASOS[paso]?.id;
     if (id === 'tipo') return !!s.proyecto.tipo;
-    if (id === 'datos') return !!s.datos.nombre.trim() && !!s.datos.whatsapp.trim();
+    if (id === 'datos') {
+      const d = s.datos;
+      return (
+        d.nombre.trim().length >= 2 &&
+        whatsappValido(d.whatsapp) &&
+        d.ciudad.trim().length >= 2 &&
+        d.autorizacion
+      );
+    }
     return true;
   }
 
@@ -170,17 +207,10 @@ export class SolicitudStore {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
       const data = JSON.parse(raw);
-      // Completa campos nuevos si la estructura cambió desde que se guardó.
-      const base = solicitudVacia();
-      for (const key of Object.keys(base) as (keyof Solicitud)[]) {
-        const valor = data.solicitud?.[key];
-        if (valor === undefined) continue;
-        (base as unknown as Record<string, unknown>)[key] =
-          typeof valor === 'object' && !Array.isArray(valor)
-            ? { ...(base[key] as object), ...valor }
-            : valor;
-      }
-      return { solicitud: base, paso: Number(data.paso) || 0 };
+      // Una solicitud guardada antes de que existiera el token necesita uno propio.
+      const solicitud = completarSolicitud(data.solicitud);
+      solicitud.token ||= crypto.randomUUID();
+      return { solicitud, paso: Number(data.paso) || 0 };
     } catch {
       return null;
     }

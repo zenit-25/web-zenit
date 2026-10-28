@@ -1,0 +1,78 @@
+<section class="adm">
+  <div class="container">
+    <header class="adm-head">
+      <div>
+        <div class="eyebrow">Panel privado</div>
+        <h1>
+          Solicitudes <span class="adm-total">{{ total() }}</span>
+        </h1>
+      </div>
+      <div class="adm-head-actions">
+        <button type="button" class="btn btn-ghost btn-sm" (click)="cargar()">Actualizar</button>
+        <button type="button" class="btn btn-ghost btn-sm" (click)="salir()">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <div class="adm-filtros">
+      <button
+        type="button"
+        class="adm-chip"
+        [class.is-active]="filtro() === ''"
+        (click)="filtrar('')"
+      >
+        Todas <span>{{ total() }}</span>
+      </button>
+      @for (e of estados; track e.id) {
+        <button
+          type="button"
+          class="adm-chip"
+          [class.is-active]="filtro() === e.id"
+          [style.--chip]="e.color"
+          (click)="filtrar(e.id)"
+        >
+          <i class="dot"></i>{{ e.nombre }} <span>{{ conteo()[e.id] ?? 0 }}</span>
+        </button>
+      }
+    </div>
+
+    <input
+      class="adm-buscar"
+      type="search"
+      placeholder="Buscar por nombre, negocio, ciudad, WhatsApp o código"
+      aria-label="Buscar solicitudes"
+      [value]="busqueda()"
+      (input)="buscar($any($event.target).value)"
+    />
+
+    @if (error()) {
+      <p class="adm-error">
+        No se pudieron cargar las solicitudes. Revisa la conexión a la base de datos.
+      </p>
+    } @else if (!cargando() && solicitudes().length === 0) {
+      <p class="adm-vacio">
+        No hay solicitudes {{ filtro() || busqueda() ? 'con ese filtro' : 'todavía' }}.
+      </p>
+    }
+
+    <div class="adm-lista" [class.is-cargando]="cargando()">
+      @for (s of solicitudes(); track s.codigo) {
+        <a class="card adm-item" [routerLink]="['/admin', s.codigo]">
+          <div class="adm-item-main">
+            <strong>{{ s.nombre }}</strong>
+            @if (s.negocio) {
+              <span class="muted"> · {{ s.negocio }}</span>
+            }
+            <p class="muted">{{ tipo(s.tipo_proyecto) }} · {{ s.ciudad }} · {{ s.whatsapp }}</p>
+          </div>
+          <div class="adm-item-meta">
+            <span class="adm-estado" [style.--chip]="estado(s.estado).color">
+              <i class="dot"></i>{{ estado(s.estado).nombre }}
+            </span>
+            <span class="muted">{{ fecha(s.creada) }}</span>
+            <code>{{ s.codigo }}</code>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>

@@ -119,6 +119,28 @@
   ></textarea>
 </label>
 
+<div class="registro" [class]="'registro is-' + registro()" role="status">
+  @switch (registro()) {
+    @case ('guardando') {
+      <span class="registro-icono" aria-hidden="true">…</span> Guardando tu solicitud...
+    }
+    @case ('ok') {
+      <span class="registro-icono" aria-hidden="true">✓</span>
+      <span
+        >Tu solicitud quedó registrada con el código <strong>{{ s.codigo }}</strong
+        >.</span
+      >
+    }
+    @case ('error') {
+      <span class="registro-icono" aria-hidden="true">!</span>
+      <span>
+        No pudimos registrarla en este momento, pero puedes enviarla igual por WhatsApp.
+        <button type="button" class="link-btn" (click)="reintentarRegistro()">Reintentar</button>
+      </span>
+    }
+  }
+</div>
+
 <div class="envio">
   <h3>Envía tu solicitud</h3>
   <p class="envio-texto">

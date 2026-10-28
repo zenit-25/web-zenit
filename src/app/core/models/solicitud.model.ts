@@ -1,6 +1,8 @@
 /** Solicitud que arma el cliente en el configurador "Diseña tu página". */
 export interface Solicitud {
   codigo: string;
+  /** Secreto del navegador que creó la solicitud: solo él puede actualizarla en la BD. */
+  token: string;
   creada: string;
   datos: {
     nombre: string;
@@ -8,6 +10,8 @@ export interface Solicitud {
     ciudad: string;
     whatsapp: string;
     correo: string;
+    /** Autorización de tratamiento de datos personales (Ley 1581 de 2012). */
+    autorizacion: boolean;
     comentario: string;
   };
   proyecto: {

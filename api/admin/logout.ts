@@ -1,0 +1,6 @@
+import { cookieCierre } from '../_lib/auth';
+import { json } from '../_lib/http';
+
+export function POST(): Response {
+  return json({ ok: true }, 200, { 'Set-Cookie': cookieCierre() });
+}
