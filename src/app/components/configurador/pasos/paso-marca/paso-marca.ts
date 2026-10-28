@@ -1,26 +1,36 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ESTILOS_VISUALES } from '../../../../core/data/configurador/catalogo.data';
+import {
+  ESTILOS_VISUALES,
+  MAX_COLORES,
+  TEMAS,
+  USOS_COLOR,
+} from '../../../../core/data/configurador/catalogo.data';
 import { Solicitud } from '../../../../core/models/solicitud.model';
 import { SolicitudStore } from '../../../../core/services/solicitud.store';
 import { CampoComentario } from '../../campo-comentario/campo-comentario';
 import { InfoTip } from '../../info-tip/info-tip';
 
+type Marca = Solicitud['marca'];
+
+/** Colores sugeridos al agregar uno nuevo, para no repetir siempre el mismo. */
+const SUGERIDOS = ['#35e3c4', '#f2a541', '#ff5c7a', '#1f2a37', '#ffffff'];
+
 @Component({
   selector: 'app-paso-marca',
   imports: [FormsModule, CampoComentario, InfoTip],
   templateUrl: './paso-marca.html',
+  styleUrl: './paso-marca.scss',
 })
 export class PasoMarca {
   protected readonly store = inject(SolicitudStore);
   protected readonly s = this.store.solicitud;
   protected readonly estilos = ESTILOS_VISUALES;
+  protected readonly temas = TEMAS;
+  protected readonly usos = USOS_COLOR;
+  protected readonly maxColores = MAX_COLORES;
 
-  protected readonly opcionesLogo: {
-    id: Solicitud['marca']['logo'];
-    nombre: string;
-    info: string;
-  }[] = [
+  protected readonly opcionesLogo: { id: Marca['logo']; nombre: string; info: string }[] = [
     {
       id: 'tengo',
       nombre: 'Ya tengo logo',
@@ -38,18 +48,54 @@ export class PasoMarca {
     },
   ];
 
-  protected elegirLogo(id: Solicitud['marca']['logo']): void {
-    this.s.marca.logo = id;
+  protected readonly opcionesPaleta: { id: Marca['paleta']; nombre: string; info: string }[] = [
+    {
+      id: 'propios',
+      nombre: 'Tengo mis colores',
+      info: 'Los escojo yo o son los de mi logo, y digo dónde van.',
+    },
+    {
+      id: 'zenit',
+      nombre: 'Que Zenit los proponga',
+      info: 'Te sugerimos una paleta acorde a tu negocio.',
+    },
+  ];
+
+  protected elegir<K extends keyof Marca>(campo: K, valor: Marca[K]): void {
+    this.s.marca[campo] = valor;
     this.store.guardar();
   }
 
-  protected elegirEstilo(id: string): void {
-    this.s.marca.estilo = id;
+  protected agregarColor(): void {
+    const colores = this.s.marca.colores;
+    if (colores.length >= MAX_COLORES) return;
+    const usados = new Set(colores.map((c) => c.uso));
+    const uso = USOS_COLOR.find((u) => !usados.has(u.id))?.id ?? 'libre';
+    colores.push({ hex: SUGERIDOS[colores.length % SUGERIDOS.length], uso });
     this.store.guardar();
   }
 
-  protected usarColores(valor: boolean): void {
-    this.s.marca.usarColores = valor;
+  protected quitarColor(i: number): void {
+    this.s.marca.colores.splice(i, 1);
     this.store.guardar();
+  }
+
+  /** Color asignado a un uso, si el cliente lo definió. */
+  private color(uso: string): string | undefined {
+    return this.s.marca.colores.find((c) => c.uso === uso)?.hex;
+  }
+
+  /** Colores de la mini vista previa, combinando el tema con lo que escogió el cliente. */
+  protected get preview() {
+    const oscuro = this.s.marca.tema === 'oscuro';
+    const principal = this.color('principal') ?? this.s.marca.colores[0]?.hex ?? '#7c5cff';
+    return {
+      fondo: this.color('fondo') ?? (oscuro ? '#111118' : '#ffffff'),
+      texto: this.color('titulos') ?? (oscuro ? '#f3f3f7' : '#1f2a37'),
+      suave: oscuro ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)',
+      boton: this.color('botones') ?? principal,
+      detalle: this.color('detalles') ?? principal,
+      principal,
+    };
   }
 }

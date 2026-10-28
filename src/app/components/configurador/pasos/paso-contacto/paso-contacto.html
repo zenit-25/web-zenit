@@ -17,11 +17,6 @@
       placeholder="300 000 0000"
       [(ngModel)]="s.contacto.whatsappBoton"
     />
-    @if (s.datos.whatsapp && s.contacto.whatsappBoton !== s.datos.whatsapp) {
-      <button type="button" class="link-btn" (click)="usarMiWhatsapp()">
-        Usar el mismo de mis datos
-      </button>
-    }
   </label>
 
   <label class="cfg-field">
@@ -73,16 +68,49 @@
       [(ngModel)]="s.contacto.direccion"
     />
   </label>
+</div>
 
-  <label class="cfg-field">
-    <span>Horario de atención</span>
-    <input
-      type="text"
-      name="horario"
-      placeholder="Lun a sáb, 8:00 a.m. – 6:00 p.m."
-      [(ngModel)]="s.contacto.horario"
-    />
-  </label>
+<div class="cfg-block">
+  <h3 class="cfg-block-title">Horario de atención</h3>
+  <div class="cfg-options compact">
+    <button
+      type="button"
+      class="cfg-option"
+      role="radio"
+      [attr.aria-checked]="s.contacto.mostrarHorario"
+      [class.is-selected]="s.contacto.mostrarHorario"
+      (click)="mostrarHorario(true)"
+    >
+      <span class="cfg-option-title">Sí, mostrar mi horario</span>
+      <span class="cfg-option-text">Lo defines día por día, incluso si cierras al mediodía.</span>
+    </button>
+    <button
+      type="button"
+      class="cfg-option"
+      role="radio"
+      [attr.aria-checked]="!s.contacto.mostrarHorario"
+      [class.is-selected]="!s.contacto.mostrarHorario"
+      (click)="mostrarHorario(false)"
+    >
+      <span class="cfg-option-title">No es necesario</span>
+      <span class="cfg-option-text">Atiendo con cita, en línea o en horario variable.</span>
+    </button>
+  </div>
+
+  @if (s.contacto.mostrarHorario) {
+    <div class="cfg-block">
+      <app-horario-semanal />
+    </div>
+    <label class="cfg-field cfg-block">
+      <span>Notas del horario <small>(opcional)</small></span>
+      <input
+        type="text"
+        name="horarioNota"
+        placeholder="Ej.: festivos de 9:00 a.m. a 1:00 p.m., horario extendido en diciembre."
+        [(ngModel)]="s.contacto.horarioNota"
+      />
+    </label>
+  }
 </div>
 
 <app-campo-comentario

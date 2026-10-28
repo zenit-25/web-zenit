@@ -32,7 +32,7 @@
   }
 }
 
-@if (store.mostrarErrores() && !store.pasoValido(1)) {
+@if (store.mostrarErrores() && !store.pasoValido(store.paso())) {
   <p class="cfg-note is-accent">Escoge un tipo de proyecto para continuar.</p>
 }
 

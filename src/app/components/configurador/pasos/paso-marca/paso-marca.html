@@ -13,7 +13,7 @@
         role="radio"
         [attr.aria-checked]="s.marca.logo === op.id"
         [class.is-selected]="s.marca.logo === op.id"
-        (click)="elegirLogo(op.id)"
+        (click)="elegir('logo', op.id)"
       >
         <span class="cfg-option-title">{{ op.nombre }}</span>
         <span class="cfg-option-text">{{ op.info }}</span>
@@ -35,51 +35,115 @@
 </div>
 
 <div class="cfg-block">
+  <h3 class="cfg-block-title">¿Tu página clara u oscura?</h3>
+  <app-info-tip titulo="¿Cuál me conviene?">
+    Una página <strong>clara</strong> (fondo blanco) se siente limpia y funciona bien para casi
+    cualquier negocio. Una <strong>oscura</strong> se ve moderna y elegante, y hace resaltar fotos y
+    colores vivos. Si no estás seguro, déjalo en nuestras manos.
+  </app-info-tip>
+  <div class="cfg-options compact">
+    @for (t of temas; track t.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.marca.tema === t.id"
+        [class.is-selected]="s.marca.tema === t.id"
+        (click)="elegir('tema', $any(t.id))"
+      >
+        <span class="cfg-option-title">{{ t.nombre }}</span>
+        <span class="cfg-option-text">{{ t.info }}</span>
+      </button>
+    }
+  </div>
+</div>
+
+<div class="cfg-block">
   <h3 class="cfg-block-title">Colores</h3>
   <div class="cfg-options compact">
-    <button
-      type="button"
-      class="cfg-option"
-      [class.is-selected]="s.marca.usarColores"
-      (click)="usarColores(true)"
-    >
-      <span class="cfg-option-title">Tengo mis colores</span>
-      <span class="cfg-option-text">Los escojo yo o son los de mi logo.</span>
-    </button>
-    <button
-      type="button"
-      class="cfg-option"
-      [class.is-selected]="!s.marca.usarColores"
-      (click)="usarColores(false)"
-    >
-      <span class="cfg-option-title">Que Zenit los proponga</span>
-      <span class="cfg-option-text">Te sugerimos una paleta acorde a tu negocio.</span>
-    </button>
+    @for (op of opcionesPaleta; track op.id) {
+      <button
+        type="button"
+        class="cfg-option"
+        role="radio"
+        [attr.aria-checked]="s.marca.paleta === op.id"
+        [class.is-selected]="s.marca.paleta === op.id"
+        (click)="elegir('paleta', op.id)"
+      >
+        <span class="cfg-option-title">{{ op.nombre }}</span>
+        <span class="cfg-option-text">{{ op.info }}</span>
+      </button>
+    }
   </div>
 
-  @if (s.marca.usarColores) {
-    <div class="cfg-grid cfg-block colores">
-      <label class="cfg-field color-field">
-        <span>Color principal</span>
-        <span class="color-input">
-          <input type="color" name="colorPrincipal" [(ngModel)]="s.marca.colorPrincipal" />
-          <code>{{ s.marca.colorPrincipal }}</code>
-        </span>
-      </label>
-      <label class="cfg-field color-field">
-        <span>Color secundario</span>
-        <span class="color-input">
-          <input type="color" name="colorSecundario" [(ngModel)]="s.marca.colorSecundario" />
-          <code>{{ s.marca.colorSecundario }}</code>
-        </span>
-      </label>
+  @if (s.marca.paleta === 'propios') {
+    <div class="colores-editor">
+      <div class="colores-lista">
+        <p class="colores-ayuda">
+          Agrega hasta {{ maxColores }} colores y dinos dónde quieres usar cada uno.
+        </p>
+        @for (color of s.marca.colores; track $index; let i = $index) {
+          <div class="color-row">
+            <input
+              type="color"
+              [name]="'color' + i"
+              [attr.aria-label]="'Color ' + (i + 1)"
+              [(ngModel)]="color.hex"
+            />
+            <code>{{ color.hex }}</code>
+            <select
+              [name]="'uso' + i"
+              [attr.aria-label]="'Uso del color ' + (i + 1)"
+              [(ngModel)]="color.uso"
+            >
+              @for (u of usos; track u.id) {
+                <option [value]="u.id">{{ u.nombre }}</option>
+              }
+            </select>
+            <button
+              type="button"
+              class="color-quitar"
+              [disabled]="s.marca.colores.length === 1"
+              [attr.aria-label]="'Quitar color ' + (i + 1)"
+              (click)="quitarColor(i)"
+            >
+              ✕
+            </button>
+          </div>
+        }
+        @if (s.marca.colores.length < maxColores) {
+          <button type="button" class="btn btn-ghost btn-sm" (click)="agregarColor()">
+            + Agregar color
+          </button>
+        }
+      </div>
+
       <div
-        class="color-preview full"
-        [style.background]="
-          'linear-gradient(120deg, ' + s.marca.colorPrincipal + ', ' + s.marca.colorSecundario + ')'
-        "
+        class="mini-preview"
+        aria-hidden="true"
+        [style.background]="preview.fondo"
+        [style.color]="preview.texto"
       >
-        Así se combinan tus colores
+        <div class="mp-nav" [style.border-color]="preview.suave">
+          <span class="mp-logo" [style.background]="preview.principal"></span>
+          <span class="mp-links">
+            <i [style.background]="preview.suave"></i><i [style.background]="preview.suave"></i
+            ><i [style.background]="preview.suave"></i>
+          </span>
+        </div>
+        <div class="mp-hero">
+          <span
+            class="mp-tag"
+            [style.color]="preview.detalle"
+            [style.border-color]="preview.detalle"
+            >Nuevo</span
+          >
+          <strong>Tu negocio</strong>
+          <span class="mp-text" [style.background]="preview.suave"></span>
+          <span class="mp-text short" [style.background]="preview.suave"></span>
+          <span class="mp-btn" [style.background]="preview.boton">Escríbenos</span>
+        </div>
+        <span class="mp-label">Vista previa aproximada</span>
       </div>
     </div>
   }
@@ -99,7 +163,7 @@
         role="radio"
         [attr.aria-checked]="s.marca.estilo === estilo.id"
         [class.is-selected]="s.marca.estilo === estilo.id"
-        (click)="elegirEstilo(estilo.id)"
+        (click)="elegir('estilo', estilo.id)"
       >
         <span class="cfg-option-title">{{ estilo.nombre }}</span>
         <span class="cfg-option-text">{{ estilo.info }}</span>
@@ -110,5 +174,5 @@
 
 <app-campo-comentario
   [(valor)]="s.marca.comentario"
-  placeholder="Ej.: no me gustan los colores muy oscuros, o tengo un manual de marca."
+  placeholder="Ej.: quiero el fondo de la portada con degradado, o tengo un manual de marca."
 />

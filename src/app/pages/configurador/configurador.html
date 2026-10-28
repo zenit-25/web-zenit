@@ -44,35 +44,35 @@
       </aside>
 
       <div class="card cfg-panel" #panel (input)="store.guardar()" (change)="store.guardar()">
-        @switch (store.paso()) {
-          @case (0) {
-            <app-paso-datos />
-          }
-          @case (1) {
+        @switch (pasos[store.paso()].id) {
+          @case ('tipo') {
             <app-paso-tipo />
           }
-          @case (2) {
+          @case ('secciones') {
             <app-paso-secciones />
           }
-          @case (3) {
+          @case ('marca') {
             <app-paso-marca />
           }
-          @case (4) {
+          @case ('contacto') {
             <app-paso-contacto />
           }
-          @case (5) {
+          @case ('pagos') {
             <app-paso-pagos />
           }
-          @case (6) {
+          @case ('dominio') {
             <app-paso-dominio />
           }
-          @case (7) {
+          @case ('extras') {
             <app-paso-extras />
           }
-          @case (8) {
+          @case ('reunion') {
             <app-paso-reunion />
           }
-          @case (9) {
+          @case ('datos') {
+            <app-paso-datos />
+          }
+          @case ('resumen') {
             <app-paso-resumen />
           }
         }
@@ -86,10 +86,13 @@
           >
             Anterior
           </button>
+          <span class="cfg-nav-paso">{{ store.paso() + 1 }} / {{ store.totalPasos }}</span>
           @if (!store.esUltimo()) {
             <button type="button" class="btn btn-primary" (click)="siguiente()">
-              Siguiente: {{ pasos[store.paso() + 1].titulo }}
+              Siguiente<span class="cfg-nav-titulo">: {{ pasos[store.paso() + 1].titulo }}</span>
             </button>
+          } @else {
+            <span class="cfg-nav-espacio"></span>
           }
         </footer>
       </div>

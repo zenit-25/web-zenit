@@ -1,0 +1,76 @@
+<div class="horario">
+  @for (d of dias; track d.dia; let i = $index) {
+    <div class="dia" [class.is-cerrado]="!d.abierto">
+      <button
+        type="button"
+        class="dia-toggle"
+        role="switch"
+        [attr.aria-checked]="d.abierto"
+        (click)="alternar(i, 'abierto')"
+      >
+        <span class="switch" aria-hidden="true"></span>
+        <span class="dia-nombre">{{ d.dia }}</span>
+      </button>
+
+      @if (d.abierto) {
+        <div class="franjas">
+          <span class="franja">
+            <input
+              type="time"
+              [name]="'desde' + i"
+              [attr.aria-label]="d.dia + ' abre'"
+              [(ngModel)]="d.desde"
+            />
+            <span>a</span>
+            <input
+              type="time"
+              [name]="'hasta' + i"
+              [attr.aria-label]="d.dia + ' cierra'"
+              [(ngModel)]="d.hasta"
+            />
+          </span>
+
+          @if (d.partida) {
+            <span class="franja">
+              <span class="y">y</span>
+              <input
+                type="time"
+                [name]="'desde2' + i"
+                [attr.aria-label]="d.dia + ' vuelve a abrir'"
+                [(ngModel)]="d.desde2"
+              />
+              <span>a</span>
+              <input
+                type="time"
+                [name]="'hasta2' + i"
+                [attr.aria-label]="d.dia + ' cierra en la tarde'"
+                [(ngModel)]="d.hasta2"
+              />
+            </span>
+          }
+
+          <button type="button" class="link-btn" (click)="alternar(i, 'partida')">
+            {{ d.partida ? 'Jornada continua' : 'Cierra al mediodía' }}
+          </button>
+        </div>
+      } @else {
+        <span class="cerrado">Cerrado</span>
+      }
+    </div>
+  }
+</div>
+
+<div class="horario-acciones">
+  <button type="button" class="link-btn" (click)="copiarLunes()">
+    Copiar el horario del lunes de martes a viernes
+  </button>
+</div>
+
+<div class="cfg-note horario-resumen">
+  <strong>Así se verá en tu página:</strong>
+  <ul>
+    @for (linea of resumen; track linea) {
+      <li>{{ linea }}</li>
+    }
+  </ul>
+</div>

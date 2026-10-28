@@ -1,6 +1,6 @@
 <div class="cfg-step-head">
-  <h2>Cuéntanos sobre ti</h2>
-  <p>Con estos datos te contactamos para mostrarte el boceto de tu página.</p>
+  <h2>¿A quién le enviamos el boceto?</h2>
+  <p>Ya armaste tu página. Déjanos tus datos para contactarte y mostrarte el boceto.</p>
 </div>
 
 <div class="cfg-grid">
@@ -35,6 +35,11 @@
       placeholder="300 000 0000"
       [(ngModel)]="s.datos.whatsapp"
     />
+    @if (s.contacto.whatsappBoton && s.datos.whatsapp !== s.contacto.whatsappBoton) {
+      <button type="button" class="link-btn" (click)="usarWhatsappPagina()">
+        Usar el mismo de tu página ({{ s.contacto.whatsappBoton }})
+      </button>
+    }
   </label>
 
   <label class="cfg-field">
@@ -58,19 +63,9 @@
       [(ngModel)]="s.datos.ciudad"
     />
   </label>
-
-  <label class="cfg-field">
-    <span>¿Ya tienes página web? <small>(enlace, opcional)</small></span>
-    <input
-      type="url"
-      name="sitioActual"
-      placeholder="https://..."
-      [(ngModel)]="s.datos.sitioActual"
-    />
-  </label>
 </div>
 
-@if (store.mostrarErrores() && !store.pasoValido(0)) {
+@if (store.mostrarErrores() && !store.pasoValido(store.paso())) {
   <p class="cfg-note is-accent">
     Completa tu <strong>nombre</strong> y tu <strong>WhatsApp</strong> para continuar.
   </p>

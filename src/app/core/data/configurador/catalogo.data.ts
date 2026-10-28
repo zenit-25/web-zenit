@@ -285,3 +285,51 @@ export const DOMINIOS = [
     info: 'Ideal para negocios que venden en Colombia.',
   },
 ] as const;
+
+export const TEMAS: OpcionCatalogo[] = [
+  {
+    id: 'claro',
+    nombre: 'Claro',
+    info: 'Fondo blanco o de tonos suaves. Transmite limpieza y frescura.',
+  },
+  {
+    id: 'oscuro',
+    nombre: 'Oscuro',
+    info: 'Fondo negro o muy oscuro. Se ve moderno y resalta las fotos.',
+  },
+  {
+    id: 'recomendado',
+    nombre: 'Que Zenit lo recomiende',
+    info: 'Escogemos el que mejor funcione con tu marca.',
+  },
+];
+
+/** Dónde puede ir cada color de la marca. */
+export const USOS_COLOR: OpcionCatalogo[] = [
+  {
+    id: 'principal',
+    nombre: 'Color principal de la marca',
+    info: 'El que más identifica a tu negocio.',
+  },
+  { id: 'fondo', nombre: 'Fondo', info: 'Color de fondo de la página o de algunas secciones.' },
+  { id: 'botones', nombre: 'Botones', info: 'Botones de acción como «Escríbenos» o «Comprar».' },
+  { id: 'titulos', nombre: 'Títulos y textos', info: 'Color de las letras de títulos o textos.' },
+  {
+    id: 'detalles',
+    nombre: 'Detalles y acentos',
+    info: 'Íconos, líneas, etiquetas y pequeños resaltes.',
+  },
+  { id: 'libre', nombre: 'Donde Zenit lo vea mejor', info: 'Lo ubicamos donde mejor combine.' },
+];
+
+export const MAX_COLORES = 5;
+
+export const DIAS_SEMANA = [
+  'Lunes',
+  'Martes',
+  'Miércoles',
+  'Jueves',
+  'Viernes',
+  'Sábado',
+  'Domingo',
+] as const;

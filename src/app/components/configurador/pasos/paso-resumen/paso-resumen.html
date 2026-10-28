@@ -6,19 +6,10 @@
 <div class="resumen">
   <div class="resumen-item">
     <div>
-      <span class="resumen-label">Tus datos</span>
-      <p>{{ s.datos.nombre }}{{ s.datos.negocio ? ' · ' + s.datos.negocio : '' }}</p>
-      <p class="muted">{{ s.datos.whatsapp }}{{ s.datos.correo ? ' · ' + s.datos.correo : '' }}</p>
-    </div>
-    <button type="button" class="link-btn" (click)="store.irA(0)">Editar</button>
-  </div>
-
-  <div class="resumen-item">
-    <div>
       <span class="resumen-label">Tipo de proyecto</span>
       <p>{{ tipo }}</p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(1)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('tipo')">Editar</button>
   </div>
 
   <div class="resumen-item">
@@ -26,7 +17,7 @@
       <span class="resumen-label">Secciones ({{ secciones.length }})</span>
       <p>{{ secciones.length ? secciones.join(', ') : 'Ninguna' }}</p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(2)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('secciones')">Editar</button>
   </div>
 
   <div class="resumen-item">
@@ -42,13 +33,18 @@
                 ? 'Sin logo'
                 : 'Logo sin definir'
         }}
-        @if (s.marca.usarColores) {
-          · <span class="swatch" [style.background]="s.marca.colorPrincipal"></span>
-          <span class="swatch" [style.background]="s.marca.colorSecundario"></span>
+        · {{ tema }}
+        @if (s.marca.paleta === 'propios') {
+          ·
+          @for (c of s.marca.colores; track $index) {
+            <span class="swatch" [style.background]="c.hex"></span>
+          }
+        } @else if (s.marca.paleta === 'zenit') {
+          · Colores propuestos por Zenit
         }
       </p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(3)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('marca')">Editar</button>
   </div>
 
   <div class="resumen-item">
@@ -66,7 +62,7 @@
         }}
       </p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(5)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('pagos')">Editar</button>
   </div>
 
   <div class="resumen-item">
@@ -74,7 +70,7 @@
       <span class="resumen-label">Hosting recomendado</span>
       <p>{{ hosting.nivel.nombre }}</p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(6)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('dominio')">Editar</button>
   </div>
 
   <div class="resumen-item">
@@ -82,7 +78,7 @@
       <span class="resumen-label">Extras</span>
       <p>{{ extras.length ? extras.join(', ') : 'Ninguno' }}</p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(7)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('extras')">Editar</button>
   </div>
 
   <div class="resumen-item">
@@ -100,7 +96,16 @@
         }}
       </p>
     </div>
-    <button type="button" class="link-btn" (click)="store.irA(8)">Editar</button>
+    <button type="button" class="link-btn" (click)="store.irAPaso('reunion')">Editar</button>
+  </div>
+
+  <div class="resumen-item">
+    <div>
+      <span class="resumen-label">Tus datos</span>
+      <p>{{ s.datos.nombre }}{{ s.datos.negocio ? ' · ' + s.datos.negocio : '' }}</p>
+      <p class="muted">{{ s.datos.whatsapp }}{{ s.datos.correo ? ' · ' + s.datos.correo : '' }}</p>
+    </div>
+    <button type="button" class="link-btn" (click)="store.irAPaso('datos')">Editar</button>
   </div>
 </div>
 
@@ -116,35 +121,52 @@
 
 <div class="envio">
   <h3>Envía tu solicitud</h3>
-  <ol>
-    <li>Descarga el archivo con todos los detalles de tu solicitud.</li>
-    <li>Abre WhatsApp con el resumen y <strong>adjunta el archivo</strong> en el chat.</li>
+  <p class="envio-texto">
+    Generamos un <strong>PDF</strong> con todo lo que escogiste. Al tocar «Enviar por WhatsApp» se
+    abre el menú para compartir con el PDF ya adjunto: solo escoge WhatsApp.
     @if (s.marca.logo === 'tengo') {
-      <li>Adjunta también tu <strong>logo</strong> en el mismo chat.</li>
+      Luego envíanos también tu <strong>logo</strong> en el mismo chat.
     }
-  </ol>
+  </p>
 
   <div class="envio-actions">
-    <button type="button" class="btn btn-ghost" (click)="descargar()">
-      {{ descargado() ? '✓ Archivo descargado' : '1. Descargar archivo .txt' }}
+    <button type="button" class="btn btn-primary" [disabled]="ocupado()" (click)="enviar()">
+      {{ ocupado() ? 'Generando PDF...' : 'Enviar por WhatsApp' }}
     </button>
-    <button type="button" class="btn btn-primary" (click)="enviarWhatsapp()">
-      2. Enviar por WhatsApp
+    <button type="button" class="btn btn-ghost" [disabled]="ocupado()" (click)="descargar()">
+      Descargar PDF
     </button>
+    <button type="button" class="link-btn" [disabled]="ocupado()" (click)="ver()">Ver PDF</button>
   </div>
-  <p class="archivo muted">Archivo: {{ archivo }}</p>
-  <p class="muted proximamente">
-    Próximamente también podrás recibir tu solicitud en PDF y por correo.
+
+  @switch (estado()) {
+    @case ('compartido') {
+      <p class="cfg-note is-safe">
+        ¡Listo! Si se envió bien, te responderemos pronto por WhatsApp.
+      </p>
+    }
+    @case ('descargado') {
+      <p class="cfg-note is-accent">
+        Descargamos tu PDF y abrimos WhatsApp con el mensaje. <strong>Adjunta el PDF</strong> en ese
+        chat (clip 📎 → Documento) antes de enviar.
+      </p>
+    }
+    @case ('error') {
+      <p class="cfg-note is-accent">
+        No pudimos generar el PDF. Intenta de nuevo o escríbenos directamente por WhatsApp.
+      </p>
+    }
+  }
+
+  <p class="envio-alterno muted">
+    ¿No aparece WhatsApp en el menú?
+    <button type="button" class="link-btn" [disabled]="ocupado()" (click)="enviar(true)">
+      Descargar el PDF y abrir WhatsApp Web
+    </button>
   </p>
+  <p class="archivo muted">Archivo: {{ archivo }}</p>
 </div>
 
 <div class="extra-actions">
-  <button type="button" class="link-btn" (click)="verTexto.set(!verTexto())">
-    {{ verTexto() ? 'Ocultar' : 'Ver' }} el texto completo
-  </button>
   <button type="button" class="link-btn danger" (click)="reiniciar()">Empezar de nuevo</button>
 </div>
-
-@if (verTexto()) {
-  <pre class="texto">{{ texto }}</pre>
-}

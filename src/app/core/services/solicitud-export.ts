@@ -2,11 +2,14 @@ import {
   ESTILOS_VISUALES,
   EXTRAS,
   SECCIONES,
+  TEMAS,
   TIPOS_PROYECTO,
+  USOS_COLOR,
 } from '../data/configurador/catalogo.data';
 import { SITE } from '../data/site.config';
-import { OpcionCatalogo, Solicitud } from '../models/solicitud.model';
+import { ColorMarca, OpcionCatalogo, Solicitud } from '../models/solicitud.model';
 import { calcularHosting } from './hosting-score';
+import { resumirHorario } from './horario';
 
 const ETIQUETAS = {
   logo: {
@@ -24,8 +27,8 @@ const ETIQUETAS = {
   dominio: { tengo: 'Ya tiene dominio', necesito: 'Necesita comprar uno', nose: 'No está seguro' },
   trafico: {
     bajo: 'Bajo (hasta 1.000 visitas al mes)',
-    medio: 'Medio (1.000 a 10.000)',
-    alto: 'Alto (más de 10.000)',
+    medio: 'Medio (1.000 a 10.000 visitas al mes)',
+    alto: 'Alto (más de 10.000 visitas al mes)',
   },
   modalidad: {
     presencial: 'Presencial',
@@ -39,9 +42,12 @@ function etiqueta<T extends Record<string, string>>(mapa: T, valor: string): str
   return (mapa as Record<string, string>)[valor] ?? 'Sin responder';
 }
 
-function nombres(catalogo: OpcionCatalogo[], ids: string[]): string {
-  const lista = catalogo.filter((o) => ids.includes(o.id)).map((o) => o.nombre);
-  return lista.length ? lista.join(', ') : 'Ninguno';
+function nombre(catalogo: OpcionCatalogo[], id: string): string {
+  return catalogo.find((o) => o.id === id)?.nombre ?? '';
+}
+
+function nombres(catalogo: OpcionCatalogo[], ids: string[]): string[] {
+  return catalogo.filter((o) => ids.includes(o.id)).map((o) => o.nombre);
 }
 
 function fecha(iso: string): string {
@@ -53,128 +59,148 @@ function fecha(iso: string): string {
 /** Tareas que Zenit debe preparar según lo que pidió el cliente. */
 export function pendientes(s: Solicitud): string[] {
   const lista: string[] = [];
-  if (s.marca.logo === 'tengo') lista.push('Pedir el archivo del logo por WhatsApp');
-  if (s.marca.logo === 'crear') lista.push('Diseñar propuesta de logo');
+  if (s.marca.logo === 'tengo') lista.push('Recibir el archivo del logo por WhatsApp');
+  if (s.marca.logo === 'crear') lista.push('Diseñar una propuesta de logo');
   if (s.pagos.recibir !== 'no' && s.pagos.cuentaWompi === 'ayuda')
     lista.push('Acompañar la creación de la cuenta Wompi');
   if (s.pagos.recibir !== 'no' && s.pagos.cuentaWompi === 'crear')
     lista.push('Confirmar que la cuenta Wompi esté aprobada');
-  if (s.dominio.estado === 'necesito') lista.push('Verificar disponibilidad del dominio');
+  if (s.dominio.estado === 'necesito') lista.push('Verificar la disponibilidad del dominio');
   if (s.extras.seleccion.includes('redaccion')) lista.push('Redactar los textos de la página');
-  if (s.reunion.modalidad) lista.push('Confirmar fecha de la reunión y preparar el boceto');
+  if (s.reunion.modalidad) lista.push('Confirmar la fecha de la reunión y preparar el boceto');
   return lista;
 }
 
-function linea(etiquetaTexto: string, valor: string | undefined): string {
-  return valor ? `${etiquetaTexto}: ${valor}\n` : '';
+/** Un bloque del documento: título, filas "etiqueta: valor" y piezas opcionales. */
+export interface BloqueSolicitud {
+  titulo: string;
+  filas: [string, string][];
+  lista?: string[];
+  /** Etiqueta que va encima de la lista (si no es la lista principal del bloque). */
+  listaTitulo?: string;
+  colores?: { hex: string; uso: string }[];
+  comentario?: string;
 }
 
-function comentario(texto: string): string {
-  return texto.trim() ? `Comentario: ${texto.trim()}\n` : '';
+/** Quita filas sin valor para que el documento solo muestre lo que el cliente llenó. */
+function filas(...pares: [string, string | undefined][]): [string, string][] {
+  return pares.filter((p): p is [string, string] => !!p[1]?.trim());
 }
 
-/** Archivo .txt completo con toda la solicitud. */
-export function construirTxt(s: Solicitud): string {
-  const tipo = TIPOS_PROYECTO.find((t) => t.id === s.proyecto.tipo);
+function colores(lista: ColorMarca[]) {
+  return lista.map((c) => ({ hex: c.hex.toUpperCase(), uso: nombre(USOS_COLOR, c.uso) }));
+}
+
+/** Contenido completo de la solicitud, organizado para el PDF. */
+export function contenidoSolicitud(s: Solicitud): BloqueSolicitud[] {
   const hosting = calcularHosting(s);
-  const estilo = ESTILOS_VISUALES.find((e) => e.id === s.marca.estilo);
-  const sep = '='.repeat(56);
-  const fechas = s.reunion.fechas.filter(Boolean).map(fecha).join(' / ');
-  const tareas = pendientes(s);
+  const pagosActivos = s.pagos.recibir === 'si' || s.pagos.recibir === 'despues';
 
-  let txt = `${sep}\n  SOLICITUD DE PROYECTO WEB — ${SITE.brand.toUpperCase()}\n`;
-  txt += `  Código: ${s.codigo}    Fecha: ${new Date().toLocaleDateString('es-CO')}\n${sep}\n\n`;
-
-  txt += '[1] DATOS DEL CLIENTE\n';
-  txt += linea('Nombre', s.datos.nombre);
-  txt += linea('Negocio', s.datos.negocio);
-  txt += linea('Ciudad', s.datos.ciudad);
-  txt += linea('WhatsApp', s.datos.whatsapp);
-  txt += linea('Correo', s.datos.correo);
-  txt += linea('Sitio actual', s.datos.sitioActual);
-  txt += comentario(s.datos.comentario) + '\n';
-
-  txt += '[2] TIPO DE PROYECTO\n';
-  txt += `${tipo?.nombre ?? 'Sin seleccionar'}\n`;
-  txt += comentario(s.proyecto.comentario) + '\n';
-
-  txt += '[3] SECCIONES\n';
-  txt += `${nombres(SECCIONES, s.secciones.seleccion)}\n`;
-  txt += comentario(s.secciones.comentario) + '\n';
-
-  txt += '[4] MARCA Y ESTILO\n';
-  txt += `Logo: ${etiqueta(ETIQUETAS.logo, s.marca.logo)}\n`;
-  if (s.marca.logo === 'crear') txt += linea('Idea para el logo', s.marca.estiloLogo);
-  txt += s.marca.usarColores
-    ? `Colores: principal ${s.marca.colorPrincipal}, secundario ${s.marca.colorSecundario}\n`
-    : 'Colores: los propone Zenit\n';
-  txt += linea('Estilo', estilo?.nombre);
-  txt += comentario(s.marca.comentario) + '\n';
-
-  txt += '[5] CONTACTO Y REDES (para mostrar en la página)\n';
-  txt += linea('WhatsApp del botón', s.contacto.whatsappBoton);
-  txt += linea('Correo de contacto', s.contacto.correoContacto);
-  txt += linea('Instagram', s.contacto.instagram);
-  txt += linea('Facebook', s.contacto.facebook);
-  txt += linea('TikTok', s.contacto.tiktok);
-  txt += linea('Otra red', s.contacto.otraRed);
-  txt += linea('Dirección', s.contacto.direccion);
-  txt += linea('Horario', s.contacto.horario);
-  txt += comentario(s.contacto.comentario) + '\n';
-
-  txt += '[6] PAGOS EN LÍNEA\n';
-  txt += `Recibir pagos: ${etiqueta(ETIQUETAS.recibir, s.pagos.recibir)}\n`;
-  if (s.pagos.recibir === 'si' || s.pagos.recibir === 'despues') {
-    txt += `Cuenta Wompi: ${etiqueta(ETIQUETAS.cuentaWompi, s.pagos.cuentaWompi)}\n`;
-    txt += `Titular: ${etiqueta(ETIQUETAS.titular, s.pagos.titular)}\n`;
-  }
-  txt += comentario(s.pagos.comentario) + '\n';
-
-  txt += '[7] DOMINIO Y HOSTING\n';
-  txt += `Dominio: ${etiqueta(ETIQUETAS.dominio, s.dominio.estado)}\n`;
-  if (s.dominio.estado === 'tengo') {
-    txt += linea('Dominio actual', s.dominio.dominioActual);
-    txt += linea('Comprado en', s.dominio.proveedor);
-  }
-  if (s.dominio.estado === 'necesito') {
-    txt += linea('Dominio deseado', s.dominio.deseado);
-    txt += linea('Alternativas', s.dominio.alternativas);
-  }
-  txt += `Tráfico esperado: ${etiqueta(ETIQUETAS.trafico, s.hosting.trafico)}\n`;
-  txt += `Hosting sugerido: ${hosting.nivel.nombre} — Puntaje ${hosting.puntos}`;
-  txt += hosting.detalle.length
-    ? ` (${hosting.detalle.map((d) => `${d.motivo} ${d.puntos}`).join(' + ')})\n`
-    : '\n';
-  txt += comentario(s.dominio.comentario || s.hosting.comentario) + '\n';
-
-  txt += '[8] EXTRAS\n';
-  txt += `${nombres(EXTRAS, s.extras.seleccion)}\n`;
-  txt += comentario(s.extras.comentario) + '\n';
-
-  txt += '[9] REUNIÓN PARA PRESENTAR EL BOCETO\n';
-  txt += `Modalidad: ${etiqueta(ETIQUETAS.modalidad, s.reunion.modalidad)}\n`;
-  txt += linea('Fechas posibles', fechas);
-  txt += linea('Franja horaria', s.reunion.franja ? ETIQUETAS.franja[s.reunion.franja] : '');
-  if (s.reunion.modalidad === 'presencial') txt += linea('Lugar', s.reunion.lugar);
-  txt += comentario(s.reunion.comentario) + '\n';
-
-  if (s.comentarioGeneral.trim()) {
-    txt += `[10] COMENTARIO GENERAL\n${s.comentarioGeneral.trim()}\n\n`;
-  }
-
-  if (tareas.length) {
-    txt += 'PENDIENTES PARA ZENIT\n';
-    txt += tareas.map((t) => `⚠ ${t}`).join('\n') + '\n\n';
-  }
-
-  txt += `${sep}\n`;
-  return txt;
+  return [
+    {
+      titulo: 'Datos del cliente',
+      filas: filas(
+        ['Nombre', s.datos.nombre],
+        ['Negocio o marca', s.datos.negocio],
+        ['WhatsApp', s.datos.whatsapp],
+        ['Correo', s.datos.correo],
+        ['Ciudad', s.datos.ciudad],
+      ),
+      comentario: s.datos.comentario,
+    },
+    {
+      titulo: 'Tipo de proyecto',
+      filas: filas(['Proyecto', nombre(TIPOS_PROYECTO, s.proyecto.tipo) || 'Sin seleccionar']),
+      comentario: s.proyecto.comentario,
+    },
+    {
+      titulo: 'Secciones de la página',
+      filas: [],
+      lista: nombres(SECCIONES, s.secciones.seleccion),
+      comentario: s.secciones.comentario,
+    },
+    {
+      titulo: 'Marca y estilo',
+      filas: filas(
+        ['Logo', etiqueta(ETIQUETAS.logo, s.marca.logo)],
+        ['Idea para el logo', s.marca.logo === 'crear' ? s.marca.estiloLogo : ''],
+        ['Tema', nombre(TEMAS, s.marca.tema) || 'Sin definir'],
+        [
+          'Colores',
+          s.marca.paleta === 'propios'
+            ? `${s.marca.colores.length} definidos por el cliente`
+            : s.marca.paleta === 'zenit'
+              ? 'Los propone Zenit'
+              : 'Sin definir',
+        ],
+        ['Estilo visual', nombre(ESTILOS_VISUALES, s.marca.estilo) || 'Sin definir'],
+      ),
+      colores: s.marca.paleta === 'propios' ? colores(s.marca.colores) : undefined,
+      comentario: s.marca.comentario,
+    },
+    {
+      titulo: 'Contacto y redes (se muestran en la página)',
+      filas: filas(
+        ['WhatsApp del botón', s.contacto.whatsappBoton],
+        ['Correo de contacto', s.contacto.correoContacto],
+        ['Instagram', s.contacto.instagram],
+        ['Facebook', s.contacto.facebook],
+        ['TikTok', s.contacto.tiktok],
+        ['Otra red', s.contacto.otraRed],
+        ['Dirección', s.contacto.direccion],
+        ['Notas del horario', s.contacto.mostrarHorario ? s.contacto.horarioNota : ''],
+      ),
+      lista: s.contacto.mostrarHorario ? resumirHorario(s.contacto.horario) : undefined,
+      listaTitulo: 'Horario de atención',
+      comentario: s.contacto.comentario,
+    },
+    {
+      titulo: 'Pagos en línea (Wompi)',
+      filas: filas(
+        ['Recibir pagos', etiqueta(ETIQUETAS.recibir, s.pagos.recibir)],
+        ['Cuenta Wompi', pagosActivos ? etiqueta(ETIQUETAS.cuentaWompi, s.pagos.cuentaWompi) : ''],
+        ['Titular', pagosActivos ? etiqueta(ETIQUETAS.titular, s.pagos.titular) : ''],
+      ),
+      comentario: s.pagos.comentario,
+    },
+    {
+      titulo: 'Dominio y hosting',
+      filas: filas(
+        ['Dominio', etiqueta(ETIQUETAS.dominio, s.dominio.estado)],
+        ['Dominio actual', s.dominio.estado === 'tengo' ? s.dominio.dominioActual : ''],
+        ['Comprado en', s.dominio.estado === 'tengo' ? s.dominio.proveedor : ''],
+        ['Dominio deseado', s.dominio.estado === 'necesito' ? s.dominio.deseado : ''],
+        ['Alternativas', s.dominio.estado === 'necesito' ? s.dominio.alternativas : ''],
+        ['Tráfico esperado', etiqueta(ETIQUETAS.trafico, s.hosting.trafico)],
+        ['Hosting sugerido', `${hosting.nivel.nombre} (puntaje ${hosting.puntos})`],
+        ['Motivos', hosting.detalle.map((d) => `${d.motivo} +${d.puntos}`).join(', ')],
+      ),
+      comentario: s.dominio.comentario,
+    },
+    {
+      titulo: 'Extras',
+      filas: [],
+      lista: nombres(EXTRAS, s.extras.seleccion),
+      comentario: s.extras.comentario,
+    },
+    {
+      titulo: 'Reunión para presentar el boceto',
+      filas: filas(
+        ['Modalidad', etiqueta(ETIQUETAS.modalidad, s.reunion.modalidad)],
+        ['Fechas posibles', s.reunion.fechas.filter(Boolean).map(fecha).join('  /  ')],
+        ['Franja horaria', s.reunion.franja ? ETIQUETAS.franja[s.reunion.franja] : ''],
+        ['Lugar', s.reunion.modalidad === 'presencial' ? s.reunion.lugar : ''],
+      ),
+      comentario: s.reunion.comentario,
+    },
+  ];
 }
 
-/** Mensaje corto para WhatsApp; el detalle completo va en el .txt adjunto. */
-export function construirMensajeWhatsapp(s: Solicitud): string {
-  const tipo = TIPOS_PROYECTO.find((t) => t.id === s.proyecto.tipo)?.nombre ?? 'Por definir';
+/** Mensaje corto para WhatsApp; el detalle completo va en el PDF. */
+export function construirMensajeWhatsapp(s: Solicitud, conPdfAdjunto: boolean): string {
+  const tipo = nombre(TIPOS_PROYECTO, s.proyecto.tipo) || 'Por definir';
   const modalidad = s.reunion.modalidad ? ETIQUETAS.modalidad[s.reunion.modalidad] : 'Por definir';
+  const extras = nombres(EXTRAS, s.extras.seleccion);
   return [
     `Hola ${SITE.brand}, armé mi solicitud de página web.`,
     '',
@@ -183,29 +209,21 @@ export function construirMensajeWhatsapp(s: Solicitud): string {
     `Proyecto: ${tipo}`,
     `Secciones: ${s.secciones.seleccion.length} seleccionadas`,
     `Pagos en línea: ${etiqueta(ETIQUETAS.recibir, s.pagos.recibir)}`,
-    `Extras: ${nombres(EXTRAS, s.extras.seleccion)}`,
+    `Extras: ${extras.length ? extras.join(', ') : 'Ninguno'}`,
     `Reunión: ${modalidad}`,
     '',
-    'Adjunto el archivo .txt con todos los detalles.',
+    conPdfAdjunto
+      ? 'Te envío el PDF con todos los detalles.'
+      : 'Ya descargué el PDF con todos los detalles y te lo adjunto en este chat.',
   ].join('\n');
 }
 
 export function nombreArchivo(s: Solicitud): string {
-  const nombre = (s.datos.negocio || s.datos.nombre || 'cliente')
+  const base = (s.datos.negocio || s.datos.nombre || 'cliente')
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-zA-Z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .toLowerCase();
-  return `solicitud-${s.codigo}-${nombre}.txt`;
-}
-
-export function descargarTxt(s: Solicitud): void {
-  const blob = new Blob([construirTxt(s)], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = nombreArchivo(s);
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return `solicitud-${s.codigo}-${base}.pdf`;
 }

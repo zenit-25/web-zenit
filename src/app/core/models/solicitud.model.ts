@@ -8,7 +8,6 @@ export interface Solicitud {
     ciudad: string;
     whatsapp: string;
     correo: string;
-    sitioActual: string;
     comentario: string;
   };
   proyecto: {
@@ -22,9 +21,11 @@ export interface Solicitud {
   marca: {
     logo: 'tengo' | 'crear' | 'no' | '';
     estiloLogo: string;
-    usarColores: boolean;
-    colorPrincipal: string;
-    colorSecundario: string;
+    /** Fondo claro, oscuro o que Zenit lo recomiende. */
+    tema: 'claro' | 'oscuro' | 'recomendado' | '';
+    /** 'propios': el cliente define sus colores; 'zenit': los proponemos nosotros. */
+    paleta: 'propios' | 'zenit' | '';
+    colores: ColorMarca[];
     estilo: string;
     comentario: string;
   };
@@ -35,7 +36,9 @@ export interface Solicitud {
     tiktok: string;
     otraRed: string;
     direccion: string;
-    horario: string;
+    mostrarHorario: boolean;
+    horario: DiaHorario[];
+    horarioNota: string;
     correoContacto: string;
     comentario: string;
   };
@@ -95,4 +98,21 @@ export interface TipoProyecto extends OpcionCatalogo {
 
 export interface Extra extends OpcionCatalogo {
   rasgo?: RasgoHosting;
+}
+
+export interface ColorMarca {
+  hex: string;
+  /** Dónde se usa: fondo, botones, títulos... (ver USOS_COLOR). */
+  uso: string;
+}
+
+export interface DiaHorario {
+  dia: string;
+  abierto: boolean;
+  desde: string;
+  hasta: string;
+  /** Jornada partida: cierra al mediodía y vuelve a abrir. */
+  partida: boolean;
+  desde2: string;
+  hasta2: string;
 }

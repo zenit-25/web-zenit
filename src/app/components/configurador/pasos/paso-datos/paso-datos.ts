@@ -11,4 +11,9 @@ import { CampoComentario } from '../../campo-comentario/campo-comentario';
 export class PasoDatos {
   protected readonly store = inject(SolicitudStore);
   protected readonly s = this.store.solicitud;
+
+  protected usarWhatsappPagina(): void {
+    this.s.datos.whatsapp = this.s.contacto.whatsappBoton;
+    this.store.guardar();
+  }
 }

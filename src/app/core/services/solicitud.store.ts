@@ -1,10 +1,11 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { Solicitud } from '../models/solicitud.model';
+import { DIAS_SEMANA } from '../data/configurador/catalogo.data';
+import { DiaHorario, Solicitud } from '../models/solicitud.model';
 
-const STORAGE_KEY = 'zenit-configurador-v1';
+const STORAGE_KEY = 'zenit-configurador-v2';
 
+/** Los datos personales van al final, cuando el cliente ya armó su página. */
 export const PASOS = [
-  { id: 'datos', titulo: 'Tus datos' },
   { id: 'tipo', titulo: 'Tipo de proyecto' },
   { id: 'secciones', titulo: 'Secciones' },
   { id: 'marca', titulo: 'Marca y estilo' },
@@ -13,13 +14,28 @@ export const PASOS = [
   { id: 'dominio', titulo: 'Dominio y hosting' },
   { id: 'extras', titulo: 'Extras' },
   { id: 'reunion', titulo: 'Reunión' },
+  { id: 'datos', titulo: 'Tus datos' },
   { id: 'resumen', titulo: 'Resumen y envío' },
 ] as const;
+
+export type PasoId = (typeof PASOS)[number]['id'];
 
 function generarCodigo(): string {
   const fecha = new Date().toISOString().slice(0, 10).replaceAll('-', '');
   const aleatorio = Math.random().toString(36).slice(2, 6).toUpperCase();
   return `ZD-${fecha}-${aleatorio}`;
+}
+
+function horarioInicial(): DiaHorario[] {
+  return DIAS_SEMANA.map((dia) => ({
+    dia,
+    abierto: dia !== 'Domingo',
+    desde: '08:00',
+    hasta: dia === 'Sábado' ? '13:00' : '18:00',
+    partida: false,
+    desde2: '14:00',
+    hasta2: '18:00',
+  }));
 }
 
 function solicitudVacia(): Solicitud {
@@ -32,7 +48,6 @@ function solicitudVacia(): Solicitud {
       ciudad: '',
       whatsapp: '',
       correo: '',
-      sitioActual: '',
       comentario: '',
     },
     proyecto: { tipo: '', comentario: '' },
@@ -40,9 +55,9 @@ function solicitudVacia(): Solicitud {
     marca: {
       logo: '',
       estiloLogo: '',
-      usarColores: false,
-      colorPrincipal: '#7c5cff',
-      colorSecundario: '#35e3c4',
+      tema: '',
+      paleta: '',
+      colores: [{ hex: '#7c5cff', uso: 'principal' }],
       estilo: '',
       comentario: '',
     },
@@ -53,7 +68,9 @@ function solicitudVacia(): Solicitud {
       tiktok: '',
       otraRed: '',
       direccion: '',
-      horario: '',
+      mostrarHorario: false,
+      horario: horarioInicial(),
+      horarioNota: '',
       correoContacto: '',
       comentario: '',
     },
@@ -99,17 +116,22 @@ export class SolicitudStore {
     this.paso.set(guardado?.paso ?? 0);
   }
 
+  irAPaso(id: PasoId): void {
+    this.irA(PASOS.findIndex((p) => p.id === id));
+  }
+
   irA(paso: number): void {
     this.paso.set(Math.min(Math.max(paso, 0), this.totalPasos - 1));
     this.mostrarErrores.set(false);
     this.guardar();
   }
 
-  /** Solo los datos de contacto y el tipo de proyecto son obligatorios. */
+  /** Solo el tipo de proyecto y los datos de contacto son obligatorios. */
   pasoValido(paso: number): boolean {
     const s = this.solicitud;
-    if (paso === 0) return !!s.datos.nombre.trim() && !!s.datos.whatsapp.trim();
-    if (paso === 1) return !!s.proyecto.tipo;
+    const id = PASOS[paso]?.id;
+    if (id === 'tipo') return !!s.proyecto.tipo;
+    if (id === 'datos') return !!s.datos.nombre.trim() && !!s.datos.whatsapp.trim();
     return true;
   }
 
