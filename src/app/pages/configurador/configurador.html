@@ -96,6 +96,47 @@
           }
         </footer>
       </div>
+
+      @if (mostrarVista) {
+        <aside class="cfg-vista" aria-label="Vista previa de tu página">
+          <app-vista-previa />
+        </aside>
+      }
     </div>
   </div>
+
+  @if (mostrarVista) {
+    <button type="button" class="cfg-vista-btn" (click)="vistaAbierta.set(true)">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+      Ver mi página
+    </button>
+  }
+
+  @if (vistaAbierta()) {
+    <div
+      class="cfg-cajon"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Vista previa de tu página"
+      (click)="vistaAbierta.set(false)"
+    >
+      <div class="cfg-cajon-panel" (click)="$event.stopPropagation()">
+        <div class="cfg-cajon-head">
+          <strong>Así va tu página</strong>
+          <button
+            type="button"
+            class="cfg-cajon-cerrar"
+            aria-label="Cerrar vista previa"
+            (click)="vistaAbierta.set(false)"
+          >
+            ✕
+          </button>
+        </div>
+        <app-vista-previa [sinTitulo]="true" />
+      </div>
+    </div>
+  }
 </section>

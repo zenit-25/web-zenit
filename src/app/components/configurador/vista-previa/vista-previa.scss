@@ -1,0 +1,114 @@
+:host {
+  display: block;
+}
+
+.vp-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.vp-head strong {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+}
+
+.vp-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.vp-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.vp-toggle button.is-active {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.vp-toggle svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.vp-marco {
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+}
+
+/* Barra de navegador para la vista de computador */
+.vp-barra {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.vp-barra i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.vp-barra span {
+  flex: 1;
+  height: 12px;
+  margin-left: 8px;
+  border-radius: 6px;
+  background: var(--border);
+}
+
+.vp-pantalla {
+  max-height: 560px;
+  margin-inline: auto;
+  overflow-y: auto;
+  /* Sin barra visible: ocuparía espacio y recortaría la maqueta */
+  scrollbar-width: none;
+}
+
+.vp-pantalla::-webkit-scrollbar {
+  display: none;
+}
+
+/* Vista de celular: marco de teléfono centrado */
+.vp-marco.is-movil {
+  padding: 14px 0;
+  border: none;
+  background: transparent;
+}
+
+.vp-marco.is-movil .vp-pantalla {
+  border-radius: 22px;
+  border: 6px solid #2a2a3a;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.vp-nota {
+  margin-top: 10px;
+  color: var(--text-faint);
+  font-size: 0.76rem;
+  text-align: center;
+}

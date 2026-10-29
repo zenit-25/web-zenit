@@ -7,6 +7,7 @@ import {
   USOS_COLOR,
 } from '../../../../core/data/configurador/catalogo.data';
 import { Solicitud } from '../../../../core/models/solicitud.model';
+import { paletaVista } from '../../../../core/services/paleta-vista';
 import { SolicitudStore } from '../../../../core/services/solicitud.store';
 import { CampoComentario } from '../../campo-comentario/campo-comentario';
 import { InfoTip } from '../../info-tip/info-tip';
@@ -80,22 +81,8 @@ export class PasoMarca {
     this.store.guardar();
   }
 
-  /** Color asignado a un uso, si el cliente lo definió. */
-  private color(uso: string): string | undefined {
-    return this.s.marca.colores.find((c) => c.uso === uso)?.hex;
-  }
-
-  /** Colores de la mini vista previa, combinando el tema con lo que escogió el cliente. */
+  /** Colores de la mini vista previa (los mismos de la vista previa general). */
   protected get preview() {
-    const oscuro = this.s.marca.tema === 'oscuro';
-    const principal = this.color('principal') ?? this.s.marca.colores[0]?.hex ?? '#7c5cff';
-    return {
-      fondo: this.color('fondo') ?? (oscuro ? '#111118' : '#ffffff'),
-      texto: this.color('titulos') ?? (oscuro ? '#f3f3f7' : '#1f2a37'),
-      suave: oscuro ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)',
-      boton: this.color('botones') ?? principal,
-      detalle: this.color('detalles') ?? principal,
-      principal,
-    };
+    return paletaVista(this.s);
   }
 }

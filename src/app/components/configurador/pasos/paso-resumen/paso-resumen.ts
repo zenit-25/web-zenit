@@ -16,10 +16,11 @@ import {
   verPdf,
 } from '../../../../core/services/solicitud-pdf';
 import { SolicitudStore } from '../../../../core/services/solicitud.store';
+import { VistaPrevia } from '../../vista-previa/vista-previa';
 
 @Component({
   selector: 'app-paso-resumen',
-  imports: [FormsModule],
+  imports: [FormsModule, VistaPrevia],
   templateUrl: './paso-resumen.html',
   styleUrl: './paso-resumen.scss',
 })

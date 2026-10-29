@@ -21,6 +21,9 @@
       [class.is-selected]="s.secciones.seleccion.includes(seccion.id)"
       (click)="store.alternar(s.secciones.seleccion, seccion.id)"
     >
+      <span class="cfg-thumb" aria-hidden="true" [style]="variables">
+        <span class="cfg-thumb-escala"><app-wire-bloque [id]="seccion.id" /></span>
+      </span>
       <span class="cfg-option-title">{{ seccion.nombre }}</span>
       <span class="cfg-option-text">{{ seccion.info }}</span>
     </button>

@@ -1,0 +1,208 @@
+@switch (id()) {
+  @case ('header') {
+    <div class="fila entre">
+      <span class="logo"></span>
+      <span class="fila menu">
+        <i class="l xs"></i><i class="l xs"></i><i class="l xs"></i>
+        @if (extras().includes('idiomas')) {
+          <i class="idioma"></i>
+        }
+        @if (extras().includes('carrito')) {
+          <i class="carrito"></i>
+        }
+        <i class="pill" [class.reservar]="extras().includes('reservas')"></i>
+      </span>
+    </div>
+  }
+
+  @case ('inicio') {
+    <div class="hero">
+      <div class="col">
+        <i class="l titulo"></i>
+        <i class="l titulo m"></i>
+        <i class="l"></i>
+        <i class="l s"></i>
+        <span class="fila"><i class="pill"></i><i class="pill hueco"></i></span>
+      </div>
+      <div class="img alto"></div>
+    </div>
+  }
+
+  @case ('nosotros') {
+    <div class="dos">
+      <div class="img alto"></div>
+      <div class="col">
+        <i class="l sub"></i>
+        <i class="l"></i>
+        <i class="l"></i>
+        <i class="l s"></i>
+        <span class="fila"><i class="punto"></i><i class="punto"></i><i class="punto"></i></span>
+      </div>
+    </div>
+  }
+
+  @case ('servicios') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r3">
+      @for (i of tres; track i) {
+        <div class="card"><i class="circ"></i><i class="l"></i><i class="l s"></i></div>
+      }
+    </div>
+  }
+
+  @case ('productos') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r4">
+      @for (i of cuatro; track i) {
+        <div class="card sin-pad">
+          <div class="img"></div>
+          <div class="pad"><i class="l"></i><i class="l xs precio"></i></div>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('menu') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r2">
+      @for (c of [0, 1]; track c) {
+        <div class="col">
+          <i class="l xs precio"></i>
+          @for (i of tres; track i) {
+            <span class="fila entre plato"><i class="l m"></i><i class="l xs precio"></i></span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @case ('galeria') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r3 apretada">
+      @for (i of seis; track i) {
+        <div class="img cuadro"></div>
+      }
+    </div>
+  }
+
+  @case ('equipo') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r4">
+      @for (i of cuatro; track i) {
+        <div class="col centro-items">
+          <i class="circ grande"></i><i class="l s"></i><i class="l xs"></i>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('precios') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r3">
+      @for (i of tres; track i) {
+        <div class="card" [class.destacada]="i === 1">
+          <i class="l xs"></i><i class="l titulo s"></i><i class="l"></i><i class="l"></i>
+          <i class="pill" [class.hueco]="i !== 1"></i>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('testimonios') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r3">
+      @for (i of tres; track i) {
+        <div class="card">
+          <span class="fila"
+            ><i class="estrella"></i><i class="estrella"></i><i class="estrella"></i
+            ><i class="estrella"></i><i class="estrella"></i
+          ></span>
+          <i class="l"></i><i class="l s"></i>
+          <span class="fila"><i class="circ"></i><i class="l xs"></i></span>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('faq') {
+    <i class="l sub centro"></i>
+    <div class="col">
+      @for (i of cuatro; track i) {
+        <div class="card fila entre pregunta"><i class="l m"></i><i class="mas"></i></div>
+      }
+    </div>
+  }
+
+  @case ('formulario') {
+    <div class="dos">
+      <div class="col"><i class="l sub"></i><i class="l"></i><i class="l s"></i></div>
+      <div class="card col">
+        <i class="campo"></i><i class="campo"></i><i class="campo area"></i
+        ><i class="pill ancho"></i>
+      </div>
+    </div>
+  }
+
+  @case ('mapa') {
+    <div class="mapa">
+      <i class="pin"></i>
+      <div class="card info"><i class="l s"></i><i class="l xs"></i></div>
+    </div>
+  }
+
+  @case ('redes') {
+    <i class="l sub centro"></i>
+    <span class="fila centro-items">
+      <i class="circ"></i><i class="circ"></i><i class="circ"></i>
+    </span>
+    <div class="rejilla r4 apretada">
+      @for (i of cuatro; track i) {
+        <div class="img cuadro"></div>
+      }
+    </div>
+  }
+
+  @case ('blog') {
+    <i class="l sub centro"></i>
+    <div class="rejilla r3">
+      @for (i of tres; track i) {
+        <div class="card sin-pad">
+          <div class="img"></div>
+          <div class="pad"><i class="l xs precio"></i><i class="l"></i><i class="l s"></i></div>
+        </div>
+      }
+    </div>
+  }
+
+  @case ('panel') {
+    <div class="panel">
+      <div class="col lateral">
+        <span class="logo"></span><i class="l"></i><i class="l s"></i><i class="l"></i
+        ><i class="l s"></i>
+      </div>
+      <div class="col">
+        <div class="rejilla r3">
+          @for (i of tres; track i) {
+            <div class="card"><i class="l xs"></i><i class="l titulo s"></i></div>
+          }
+        </div>
+        <div class="card col">
+          @for (i of cuatro; track i) {
+            <span class="fila entre plato"><i class="l s"></i><i class="l xs precio"></i></span>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @case ('footer') {
+    <div class="rejilla r3 pie">
+      <div class="col"><span class="logo"></span><i class="l"></i><i class="l s"></i></div>
+      <div class="col"><i class="l xs"></i><i class="l s"></i><i class="l s"></i></div>
+      <div class="col">
+        <i class="l xs"></i
+        ><span class="fila"><i class="circ"></i><i class="circ"></i><i class="circ"></i></span>
+      </div>
+    </div>
+  }
+}

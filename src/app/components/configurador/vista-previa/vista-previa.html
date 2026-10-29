@@ -1,0 +1,50 @@
+<div class="vp-head">
+  @if (!sinTitulo()) {
+    <strong>Así va tu página</strong>
+  }
+  <div class="vp-toggle" role="group" aria-label="Tipo de pantalla">
+    <button
+      type="button"
+      [class.is-active]="dispositivo() === 'escritorio'"
+      [attr.aria-pressed]="dispositivo() === 'escritorio'"
+      (click)="dispositivo.set('escritorio')"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="12" rx="1.5" />
+        <path d="M8 20h8M12 16v4" />
+      </svg>
+      Computador
+    </button>
+    <button
+      type="button"
+      [class.is-active]="dispositivo() === 'movil'"
+      [attr.aria-pressed]="dispositivo() === 'movil'"
+      (click)="dispositivo.set('movil')"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="7" y="2.5" width="10" height="19" rx="2" />
+        <path d="M11 18.5h2" />
+      </svg>
+      Celular
+    </button>
+  </div>
+</div>
+
+<div class="vp-marco" [class.is-movil]="dispositivo() === 'movil'">
+  @if (dispositivo() === 'escritorio') {
+    <div class="vp-barra" aria-hidden="true"><i></i><i></i><i></i><span></span></div>
+  }
+  <div class="vp-pantalla" [style.width.px]="ancho * escala">
+    <div class="vp-escala" [style.width.px]="ancho" [style.zoom]="escala">
+      <app-pagina-wire
+        [secciones]="secciones()"
+        [extras]="extras()"
+        [whatsapp]="true"
+        [movil]="dispositivo() === 'movil'"
+        [variables]="variables()"
+      />
+    </div>
+  </div>
+</div>
+
+<p class="vp-nota">Vista aproximada: el diseño final lo creamos contigo en el boceto.</p>

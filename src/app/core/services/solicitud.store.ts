@@ -136,6 +136,12 @@ export class SolicitudStore {
   readonly esUltimo = computed(() => this.paso() === this.totalPasos - 1);
   /** Se activa cuando el cliente intenta avanzar con datos obligatorios vacíos. */
   readonly mostrarErrores = signal(false);
+  /**
+   * Aumenta con cada cambio guardado. La solicitud es un objeto mutable, así que
+   * las vistas que dependen de ella (como la vista previa) leen esta señal para
+   * volver a dibujarse.
+   */
+  readonly cambios = signal(0);
   /** Campo trampa anti-spam: no se guarda ni se muestra a las personas. */
   readonly trampa = signal('');
 
@@ -187,6 +193,7 @@ export class SolicitudStore {
   }
 
   guardar(): void {
+    this.cambios.update((n) => n + 1);
     try {
       localStorage.setItem(
         STORAGE_KEY,

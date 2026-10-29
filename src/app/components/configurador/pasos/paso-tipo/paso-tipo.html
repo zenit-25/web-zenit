@@ -16,6 +16,11 @@
       [class.is-selected]="s.proyecto.tipo === tipo.id"
       (click)="elegir(tipo)"
     >
+      <span class="cfg-thumb alto" aria-hidden="true">
+        <span class="cfg-thumb-escala pagina">
+          <app-pagina-wire [secciones]="miniatura(tipo)" [variables]="variables" />
+        </span>
+      </span>
       <span class="cfg-option-title">{{ tipo.nombre }}</span>
       <span class="cfg-option-text">{{ tipo.info }}</span>
       <span class="cfg-option-meta">Ideal para: {{ tipo.ideal }}</span>

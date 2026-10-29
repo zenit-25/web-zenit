@@ -342,3 +342,30 @@
   font-family: var(--font-display);
   font-size: 1.15rem;
 }
+
+/* ---------- Miniaturas esquemáticas en las tarjetas ---------- */
+.cfg-thumb {
+  display: block;
+  height: 64px;
+  margin: 0 0 6px -30px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--wf-fondo, #fff);
+  pointer-events: none;
+}
+
+.cfg-thumb.alto {
+  height: 84px;
+}
+
+.cfg-thumb-escala {
+  display: block;
+  width: 600px;
+  zoom: 0.3;
+}
+
+.cfg-thumb-escala.pagina {
+  width: 680px;
+  zoom: 0.27;
+}
