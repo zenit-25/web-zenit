@@ -10,6 +10,7 @@
     "test": "ng test"
   },
   "private": true,
+  "type": "module",
   "packageManager": "npm@11.13.0",
   "dependencies": {
     "@angular/common": "^22.1.0",

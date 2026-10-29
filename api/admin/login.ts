@@ -1,5 +1,5 @@
-import { claveCorrecta, cookieSesion } from '../_lib/auth';
-import { error, json, leerJson } from '../_lib/http';
+import { claveCorrecta, cookieSesion } from '../_lib/auth.js';
+import { error, json, leerJson } from '../_lib/http.js';
 
 export async function POST(request: Request): Promise<Response> {
   const cuerpo = await leerJson<{ clave?: unknown }>(request, 2_000);

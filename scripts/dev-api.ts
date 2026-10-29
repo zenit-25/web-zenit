@@ -54,7 +54,7 @@ async function prepararBaseDeDatos(): Promise<void> {
   }
   const { PGlite } = await import('@electric-sql/pglite');
   const db = new PGlite('./.pglite-dev');
-  const { usarConsulta } = await import('../api/_lib/db');
+  const { usarConsulta } = await import('../api/_lib/db.js');
   usarConsulta(async (texto, parametros = []) => (await db.query(texto, parametros)).rows as never);
   console.log('Usando PGlite local (.pglite-dev/)');
 }

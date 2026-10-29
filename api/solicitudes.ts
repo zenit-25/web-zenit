@@ -1,6 +1,6 @@
-import { query } from './_lib/db';
-import { error, json, leerJson } from './_lib/http';
-import { validarSolicitud } from './_lib/validacion';
+import { query } from './_lib/db.js';
+import { error, json, leerJson } from './_lib/http.js';
+import { validarSolicitud } from './_lib/validacion.js';
 
 interface Cuerpo {
   solicitud?: unknown;

@@ -1,7 +1,7 @@
-import { sesionValida } from '../../_lib/auth';
-import { query } from '../../_lib/db';
-import { error, json, leerJson, ultimoSegmento } from '../../_lib/http';
-import { ESTADOS } from '../../_lib/validacion';
+import { sesionValida } from '../../_lib/auth.js';
+import { query } from '../../_lib/db.js';
+import { error, json, leerJson, ultimoSegmento } from '../../_lib/http.js';
+import { ESTADOS } from '../../_lib/validacion.js';
 
 const COLUMNAS = `codigo, creada, actualizada, estado, nombre, negocio, ciudad, whatsapp, correo,
   tipo_proyecto, hosting_nivel, hosting_puntos, autorizacion_datos, notas, datos`;

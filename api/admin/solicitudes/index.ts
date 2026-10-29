@@ -1,7 +1,7 @@
-import { sesionValida } from '../../_lib/auth';
-import { query } from '../../_lib/db';
-import { error, json } from '../../_lib/http';
-import { ESTADOS } from '../../_lib/validacion';
+import { sesionValida } from '../../_lib/auth.js';
+import { query } from '../../_lib/db.js';
+import { error, json } from '../../_lib/http.js';
+import { ESTADOS } from '../../_lib/validacion.js';
 
 /** Lista de solicitudes para el panel, con filtro por estado y búsqueda. */
 export async function GET(request: Request): Promise<Response> {
